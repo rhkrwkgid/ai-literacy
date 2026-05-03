@@ -438,39 +438,6 @@ body {
 .btn-solid:hover { background: var(--cream); }
 .btn-solid:active { transform: scale(0.97); }
 
-.qr-card {
-  margin-top: 2rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--line);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.qr-desc {
-  font-size: 13px;
-  color: var(--cream2);
-  font-weight: 300;
-  text-align: center;
-  line-height: 1.6;
-}
-
-#qr-code {
-  background: #fff;
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-}
-
-#qr-code canvas, #qr-code img { display: block; }
-
-.qr-url {
-  font-size: 11px;
-  color: var(--cream3);
-  letter-spacing: 0.03em;
-  font-weight: 300;
-}
 
 .copy-msg {
   font-size: 11px;
@@ -579,17 +546,10 @@ body {
     </div>
     <p class="copy-msg" id="copy-msg"></p>
 
-    <div class="qr-card">
-      <p class="rec-label">친구에게 공유하기</p>
-      <p class="qr-desc">QR코드를 스캔하면 이 진단을 바로 시작할 수 있어요</p>
-      <div id="qr-code"></div>
-      <p class="qr-url">rhkrwkgid.github.io/ai-literacy</p>
-    </div>
   </div>
 
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 const Qs = [
   { cat:"기초 이해",      q:"AI와 챗GPT의 차이를 다른 사람에게 설명할 수 있다" },
@@ -731,17 +691,6 @@ function showResult() {
   }).join('');
 
   show('s-result');
-
-  const qrEl = document.getElementById('qr-code');
-  qrEl.innerHTML = '';
-  new QRCode(qrEl, {
-    text: 'https://rhkrwkgid.github.io/ai-literacy/',
-    width: 160,
-    height: 160,
-    colorDark: '#1C1A17',
-    colorLight: '#ffffff',
-    correctLevel: QRCode.CorrectLevel.M,
-  });
 
   setTimeout(() => {
     cats.forEach(cat => {
