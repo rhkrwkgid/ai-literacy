@@ -10,20 +10,20 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:       #0D0C0A;
-  --bg1:      #161512;
-  --bg2:      #1E1C19;
-  --bg3:      #272420;
-  --line:     rgba(255,255,255,0.07);
-  --line2:    rgba(255,255,255,0.14);
-  --cream:    #EDE8DF;
-  --cream2:   #A09A90;
-  --cream3:   #5C5750;
+  --bg:       #F7F5F1;
+  --bg1:      #EDEAE3;
+  --bg2:      #E2DDD5;
+  --bg3:      #D2CCC3;
+  --line:     rgba(0,0,0,0.08);
+  --line2:    rgba(0,0,0,0.16);
+  --cream:    #1C1A17;
+  --cream2:   #5A5550;
+  --cream3:   #918B83;
 
-  --c-blue:   #7AAFD6;
-  --c-teal:   #60BF97;
-  --c-lav:    #B49FE8;
-  --c-amber:  #D4A84B;
+  --c-blue:   #2670B0;
+  --c-teal:   #137A59;
+  --c-lav:    #6945BE;
+  --c-amber:  #A06A10;
 
   --serif:   'Gowun Batang', serif;
   --display: 'Black Han Sans', sans-serif;
@@ -449,15 +449,15 @@ body {
 }
 
 /* category color helpers */
-.col-blue  { color: var(--c-blue);  border-color: rgba(122,175,214,.3); }
-.col-teal  { color: var(--c-teal);  border-color: rgba(96,191,151,.3); }
-.col-lav   { color: var(--c-lav);   border-color: rgba(180,159,232,.3); }
-.col-amber { color: var(--c-amber); border-color: rgba(212,168,75,.3); }
+.col-blue  { color: var(--c-blue);  border-color: rgba(38,112,176,.25); }
+.col-teal  { color: var(--c-teal);  border-color: rgba(19,122,89,.25); }
+.col-lav   { color: var(--c-lav);   border-color: rgba(105,69,190,.25); }
+.col-amber { color: var(--c-amber); border-color: rgba(160,106,16,.25); }
 
-.bg-col-blue  { background: rgba(122,175,214,.12); }
-.bg-col-teal  { background: rgba(96,191,151,.12); }
-.bg-col-lav   { background: rgba(180,159,232,.12); }
-.bg-col-amber { background: rgba(212,168,75,.12); }
+.bg-col-blue  { background: rgba(38,112,176,.1); }
+.bg-col-teal  { background: rgba(19,122,89,.1); }
+.bg-col-lav   { background: rgba(105,69,190,.1); }
+.bg-col-amber { background: rgba(160,106,16,.1); }
 
 /* mobile */
 @media (max-width: 480px) {
@@ -572,10 +572,10 @@ const Ans = [
 ];
 
 const catMeta = {
-  "기초 이해":      { cls:"col-blue",  bg:"bg-col-blue",  dot:"#7AAFD6", bar:"#7AAFD6" },
-  "도구 활용":      { cls:"col-teal",  bg:"bg-col-teal",  dot:"#60BF97", bar:"#60BF97" },
-  "프롬프트 역량":  { cls:"col-lav",   bg:"bg-col-lav",   dot:"#B49FE8", bar:"#B49FE8" },
-  "비판·윤리 의식": { cls:"col-amber", bg:"bg-col-amber", dot:"#D4A84B", bar:"#D4A84B" },
+  "기초 이해":      { cls:"col-blue",  bg:"bg-col-blue",  dot:"#2670B0", bar:"#2670B0" },
+  "도구 활용":      { cls:"col-teal",  bg:"bg-col-teal",  dot:"#137A59", bar:"#137A59" },
+  "프롬프트 역량":  { cls:"col-lav",   bg:"bg-col-lav",   dot:"#6945BE", bar:"#6945BE" },
+  "비판·윤리 의식": { cls:"col-amber", bg:"bg-col-amber", dot:"#A06A10", bar:"#A06A10" },
 };
 
 const Levels = [
