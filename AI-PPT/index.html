@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI PPT 도구 비교 체크리스트</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --navy: #1A2E4A;
+    --teal: #1E6B5A;
+    --orange: #E8631A;
+    --blue: #2563A8;
+    --white: #FFFFFF;
+    --gray-50: #F8FAFC;
+    --gray-100: #F1F5F9;
+    --gray-200: #E2E8F0;
+    --gray-400: #94A3B8;
+    --gray-600: #475569;
+    --gray-800: #1E293B;
+
+    --gamma: #6366F1;
+    --claude: #D97706;
+    --genspark: #059669;
+    --gemini: #2563A8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--navy);
+    padding: 28px 40px 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .header-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.3px;
+  }
+
+  .header-sub {
+    font-size: 12px;
+    color: var(--gray-400);
+    margin-top: 3px;
+    font-weight: 300;
+  }
+
+  .header-badge {
+    background: var(--orange);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  .name-section {
+    max-width: 1100px;
+    margin: 32px auto 0;
+    padding: 0 24px;
+  }
+
+  .name-card {
+    background: white;
+    border-radius: 14px;
+    padding: 20px 28px;
+    border: 2px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .name-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+    white-space: nowrap;
+  }
+
+  .name-input {
+    flex: 1;
+    min-width: 200px;
+    border: 2px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 15px;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--gray-800);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .name-input:focus { border-color: var(--teal); }
+  .name-input::placeholder { color: var(--gray-400); }
+
+  .prompt-section {
+    max-width: 1100px;
+    margin: 20px auto;
+    padding: 0 24px;
+  }
+
+  .prompt-card {
+    background: linear-gradient(135deg, #EEF2FF 0%, #E0F2FE 100%);
+    border-radius: 14px;
+    padding: 20px 28px;
+    border-left: 4px solid var(--blue);
+  }
+
+  .prompt-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+
+  .prompt-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--navy);
+    line-height: 1.7;
+    white-space: pre-wrap;
+  }
+
+  .tools-section {
+    max-width: 1100px;
+    margin: 0 auto 20px;
+    padding: 0 24px;
+  }
+
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  @media (max-width: 700px) { .tools-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .tool-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    border-radius: 10px;
+    padding: 12px 16px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    border: 2px solid var(--gray-200);
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .tool-link:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+
+  .tool-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .tool-link.gamma { border-color: var(--gamma); color: var(--gamma); }
+  .tool-link.gamma .tool-dot { background: var(--gamma); }
+  .tool-link.claude { border-color: var(--claude); color: var(--claude); }
+  .tool-link.claude .tool-dot { background: var(--claude); }
+  .tool-link.genspark { border-color: var(--genspark); color: var(--genspark); }
+  .tool-link.genspark .tool-dot { background: var(--genspark); }
+  .tool-link.gemini { border-color: var(--gemini); color: var(--gemini); }
+  .tool-link.gemini .tool-dot { background: var(--gemini); }
+
+  .table-section {
+    max-width: 1100px;
+    margin: 0 auto 24px;
+    padding: 0 24px;
+  }
+
+  .table-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    border: 1px solid var(--gray-200);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead {
+    background: var(--navy);
+  }
+
+  thead th {
+    padding: 16px 14px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 0.3px;
+  }
+
+  thead th:first-child {
+    text-align: left;
+    padding-left: 24px;
+    width: 22%;
+  }
+
+  .th-gamma { color: #A5B4FC; }
+  .th-claude { color: #FCD34D; }
+  .th-genspark { color: #6EE7B7; }
+  .th-gemini { color: #93C5FD; }
+
+  tbody tr {
+    border-bottom: 1px solid var(--gray-100);
+    transition: background 0.15s;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--gray-50); }
+
+  td {
+    padding: 14px 12px;
+    vertical-align: middle;
+  }
+
+  td:first-child {
+    padding-left: 24px;
+  }
+
+  .criterion-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 2px;
+  }
+
+  .criterion-desc {
+    font-size: 11.5px;
+    color: var(--gray-400);
+    line-height: 1.4;
+  }
+
+  .star-group {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  .star {
+    font-size: 22px;
+    cursor: pointer;
+    transition: transform 0.1s;
+    color: var(--gray-200);
+    user-select: none;
+    line-height: 1;
+  }
+
+  .star:hover, .star.active { color: #F59E0B; }
+  .star:hover { transform: scale(1.2); }
+
+  .comment-input {
+    width: 100%;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 12px;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--gray-800);
+    outline: none;
+    resize: none;
+    transition: border-color 0.2s;
+    min-height: 48px;
+    background: var(--gray-50);
+  }
+
+  .comment-input:focus {
+    border-color: var(--teal);
+    background: white;
+  }
+
+  .comment-input::placeholder { color: var(--gray-400); }
+
+  .total-row {
+    background: var(--navy) !important;
+  }
+
+  .total-row td {
+    padding: 16px 12px;
+    color: white;
+  }
+
+  .total-row td:first-child {
+    padding-left: 24px;
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .total-score {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 900;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .total-score.gamma-score { color: #A5B4FC; }
+  .total-score.claude-score { color: #FCD34D; }
+  .total-score.genspark-score { color: #6EE7B7; }
+  .total-score.gemini-score { color: #93C5FD; }
+
+  .best-section {
+    max-width: 1100px;
+    margin: 0 auto 32px;
+    padding: 0 24px;
+  }
+
+  .best-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px 28px;
+    border: 1px solid var(--gray-200);
+  }
+
+  .best-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--teal);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+  }
+
+  .best-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 600px) { .best-grid { grid-template-columns: 1fr; } }
+
+  .best-item label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-600);
+    margin-bottom: 6px;
+  }
+
+  .best-item textarea {
+    width: 100%;
+    border: 2px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--gray-800);
+    outline: none;
+    resize: none;
+    min-height: 60px;
+    transition: border-color 0.2s;
+  }
+
+  .best-item textarea:focus { border-color: var(--teal); }
+  .best-item textarea::placeholder { color: var(--gray-400); }
+
+  .btn-row {
+    max-width: 1100px;
+    margin: 0 auto 48px;
+    padding: 0 24px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 13px 28px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+
+  .btn-primary {
+    background: var(--teal);
+    color: white;
+  }
+
+  .btn-primary:hover { background: #165a4a; transform: translateY(-1px); }
+
+  .btn-secondary {
+    background: var(--gray-100);
+    color: var(--gray-600);
+    border: 2px solid var(--gray-200);
+  }
+
+  .btn-secondary:hover { background: var(--gray-200); }
+
+  .btn-reset {
+    background: white;
+    color: var(--orange);
+    border: 2px solid var(--orange);
+    margin-left: auto;
+  }
+
+  .btn-reset:hover { background: #fff5f0; }
+
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-overlay.show { display: flex; }
+
+  .modal {
+    background: white;
+    border-radius: 20px;
+    padding: 36px 40px;
+    max-width: 560px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+
+  .modal-title {
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+
+  .modal-sub {
+    font-size: 13px;
+    color: var(--gray-400);
+    margin-bottom: 24px;
+  }
+
+  .result-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    border: 2px solid transparent;
+  }
+
+  .result-item.winner {
+    border-color: #F59E0B;
+    background: #FFFBEB;
+  }
+
+  .result-name {
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .result-score {
+    font-size: 24px;
+    font-weight: 900;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .winner-badge {
+    font-size: 11px;
+    font-weight: 700;
+    background: #F59E0B;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-left: 8px;
+  }
+
+  .modal-close {
+    margin-top: 24px;
+    width: 100%;
+    padding: 13px;
+    background: var(--navy);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+  }
+
+  .modal-close:hover { background: #243b55; }
+
+  .section-title {
+    max-width: 1100px;
+    margin: 24px auto 12px;
+    padding: 0 24px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="header-title">🤖 AI PPT 도구 비교 체크리스트</div>
+      <div class="header-sub">농식품인재개발원 | AI 기반 업무 자동화 및 데이터 활용 실무 | 7회차</div>
+    </div>
+    <div class="header-badge">Gamma vs Claude vs Genspark vs Gemini</div>
+  </div>
+</header>
+
+<div class="section-title">참가자 정보</div>
+<div class="name-section">
+  <div class="name-card">
+    <div class="name-label">👤 이름 / 소속 부서</div>
+    <input class="name-input" type="text" id="userName" placeholder="예: 홍길동 / 농업정책과" />
+  </div>
+</div>
+
+<div class="section-title">공통 프롬프트 (4개 도구에 동일하게 입력)</div>
+<div class="prompt-section">
+  <div class="prompt-card">
+    <div class="prompt-label">📋 Input Prompt</div>
+    <div class="prompt-text">2025 스마트팜 혁신밸리 확대 정책 발표 슬라이드를 만들어줘.
+
+구성:
+1장. 표지 — 정책명 + 농림축산식품부
+2장. 정책 배경 — 왜 스마트팜이 필요한가 (식량 안보·기후변화·고령화)
+3장. 현황 및 성과 — 혁신밸리 3개소 운영 현황 + 주요 수치
+4장. 2025년 추진 계획 — 확대 목표 + 지원 내용
+5장. 기대 효과 — 농가 소득·청년 유입·수출 확대
+
+5장 / 정부기관 공식 발표 스타일 / 깔끔하고 신뢰감 있는 디자인</div>
+  </div>
+</div>
+
+<div class="section-title">도구 바로가기</div>
+<div class="tools-section">
+  <div class="tools-grid">
+    <a class="tool-link gamma" href="https://gamma.app" target="_blank">
+      <span class="tool-dot"></span> 🎬 Gamma
+    </a>
+    <a class="tool-link claude" href="https://claude.ai" target="_blank">
+      <span class="tool-dot"></span> 🤖 Claude
+    </a>
+    <a class="tool-link genspark" href="https://genspark.ai" target="_blank">
+      <span class="tool-dot"></span> ⚡ Genspark
+    </a>
+    <a class="tool-link gemini" href="https://gemini.google.com" target="_blank">
+      <span class="tool-dot"></span> 💎 Gemini
+    </a>
+  </div>
+</div>
+
+<div class="section-title">평가표 (별점 1~5점)</div>
+<div class="table-section">
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>평가 항목</th>
+          <th class="th-gamma">🎬 Gamma</th>
+          <th class="th-claude">🤖 Claude</th>
+          <th class="th-genspark">⚡ Genspark</th>
+          <th class="th-gemini">💎 Gemini</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="section-title">한 줄 총평 & 최종 선택</div>
+<div class="best-section">
+  <div class="best-card">
+    <div class="best-label">💬 나의 평가 메모</div>
+    <div class="best-grid">
+      <div class="best-item">
+        <label>🎬 Gamma 한 줄 총평</label>
+        <textarea id="comment-gamma" placeholder="예: 디자인이 제일 예쁘지만 한국어가 좀 어색함"></textarea>
+      </div>
+      <div class="best-item">
+        <label>🤖 Claude 한 줄 총평</label>
+        <textarea id="comment-claude" placeholder="예: 내용 품질이 가장 높고 구조가 탄탄함"></textarea>
+      </div>
+      <div class="best-item">
+        <label>⚡ Genspark 한 줄 총평</label>
+        <textarea id="comment-genspark" placeholder="예: 생성 속도가 빠르고 구성이 실용적임"></textarea>
+      </div>
+      <div class="best-item">
+        <label>💎 Gemini 한 줄 총평</label>
+        <textarea id="comment-gemini" placeholder="예: Google Slides 연동이 편리함"></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="btn-row">
+  <button class="btn btn-primary" onclick="showResult()">📊 결과 보기</button>
+  <button class="btn btn-secondary" onclick="printPage()">🖨️ 인쇄하기</button>
+  <button class="btn btn-reset" onclick="resetAll()">↺ 초기화</button>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-title">📊 평가 결과</div>
+    <div class="modal-sub" id="modalSub"></div>
+    <div id="modalResults"></div>
+    <button class="modal-close" onclick="closeModal()">닫기</button>
+  </div>
+</div>
+
+<script>
+const criteria = [
+  { id: 'design',   name: '디자인 완성도',   desc: '레이아웃·색상·폰트·전체 비주얼' },
+  { id: 'korean',   name: '한국어 품질',     desc: '한글 텍스트 자연스러움·오타' },
+  { id: 'content',  name: '내용 정확도',     desc: '요청한 구성대로 나왔는지' },
+  { id: 'speed',    name: '생성 속도',       desc: '프롬프트 입력 후 완성까지 시간' },
+  { id: 'edit',     name: '수정 편의성',     desc: '텍스트·디자인 수정하기 쉬운가' },
+];
+const tools = ['gamma', 'claude', 'genspark', 'gemini'];
+const toolNames = { gamma: '🎬 Gamma', claude: '🤖 Claude', genspark: '⚡ Genspark', gemini: '💎 Gemini' };
+const toolColors = { gamma: '#6366F1', claude: '#D97706', genspark: '#059669', gemini: '#2563A8' };
+
+const ratings = {};
+criteria.forEach(c => {
+  ratings[c.id] = {};
+  tools.forEach(t => ratings[c.id][t] = 0);
+});
+
+function buildTable() {
+  const tbody = document.getElementById('tableBody');
+  criteria.forEach(c => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <div class="criterion-name">${c.name}</div>
+        <div class="criterion-desc">${c.desc}</div>
+      </td>
+      ${tools.map(t => `
+        <td>
+          <div class="star-group" id="stars-${c.id}-${t}">
+            ${[1,2,3,4,5].map(n => `
+              <span class="star" data-crit="${c.id}" data-tool="${t}" data-val="${n}"
+                onclick="setRating('${c.id}','${t}',${n})">★</span>
+            `).join('')}
+          </div>
+        </td>
+      `).join('')}
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const totalTr = document.createElement('tr');
+  totalTr.className = 'total-row';
+  totalTr.innerHTML = `
+    <td>총점 / 25점</td>
+    ${tools.map(t => `
+      <td><div class="total-score ${t}-score" id="total-${t}">0</div></td>
+    `).join('')}
+  `;
+  tbody.appendChild(totalTr);
+}
+
+function setRating(crit, tool, val) {
+  ratings[crit][tool] = val;
+  const group = document.getElementById(`stars-${crit}-${tool}`);
+  group.querySelectorAll('.star').forEach(s => {
+    s.classList.toggle('active', parseInt(s.dataset.val) <= val);
+  });
+  updateTotals();
+}
+
+function updateTotals() {
+  tools.forEach(t => {
+    const total = criteria.reduce((sum, c) => sum + (ratings[c.id][t] || 0), 0);
+    document.getElementById(`total-${t}`).textContent = total;
+  });
+}
+
+function showResult() {
+  const name = document.getElementById('userName').value || '익명';
+  const scores = tools.map(t => ({
+    tool: t,
+    score: criteria.reduce((sum, c) => sum + (ratings[c.id][t] || 0), 0)
+  })).sort((a, b) => b.score - a.score);
+
+  const winner = scores[0];
+  document.getElementById('modalSub').textContent = `${name}님의 평가 결과입니다`;
+
+  const html = scores.map((s, i) => `
+    <div class="result-item ${i === 0 && s.score > 0 ? 'winner' : ''}" style="background:${i===0&&s.score>0?'#FFFBEB':'#F8FAFC'}">
+      <div style="display:flex;align-items:center;">
+        <span class="result-name" style="color:${toolColors[s.tool]}">${toolNames[s.tool]}</span>
+        ${i === 0 && s.score > 0 ? '<span class="winner-badge">👑 1위</span>' : ''}
+      </div>
+      <span class="result-score" style="color:${toolColors[s.tool]}">${s.score}<span style="font-size:14px;font-weight:400;color:#94A3B8">/25</span></span>
+    </div>
+  `).join('');
+
+  document.getElementById('modalResults').innerHTML = html;
+  document.getElementById('modal').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('show');
+}
+
+function printPage() { window.print(); }
+
+function resetAll() {
+  if (!confirm('모든 입력값을 초기화할까요?')) return;
+  criteria.forEach(c => {
+    tools.forEach(t => {
+      ratings[c.id][t] = 0;
+      const group = document.getElementById(`stars-${c.id}-${t}`);
+      if (group) group.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
+    });
+  });
+  updateTotals();
+  ['gamma','claude','genspark','gemini'].forEach(t => {
+    const el = document.getElementById(`comment-${t}`);
+    if (el) el.value = '';
+  });
+  document.getElementById('userName').value = '';
+}
+
+document.getElementById('modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+buildTable();
+</script>
+</body>
+</html>
