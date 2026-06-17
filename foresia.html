@@ -360,7 +360,7 @@ body {
   margin-bottom: 1.25rem;
 }
 
-.bar-item { margin-bottom: 1.1rem; }
+.bar-item { margin-bottom: 1.6rem; }
 .bar-item:last-child { margin-bottom: 0; }
 
 .bar-header {
@@ -378,6 +378,7 @@ body {
   background: var(--bg3);
   border-radius: 2px;
   overflow: hidden;
+  margin-bottom: 10px;
 }
 
 .bar-fill {
@@ -385,6 +386,27 @@ body {
   border-radius: 2px;
   width: 0;
   transition: width 1.1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bar-feedback {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--ink2);
+  line-height: 1.7;
+  padding: 10px 13px;
+  background: var(--bg1);
+  border-radius: 6px;
+  border-left: 2px solid;
+  animation: fadeUp .4s ease forwards;
+}
+
+.bar-action {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--ink3);
+  margin-top: 6px;
+  padding-left: 13px;
+  line-height: 1.6;
 }
 
 .rec-card {
@@ -614,6 +636,29 @@ const Levels = [
     rec:"조직 AI 전략 로드맵 설계, 외부 AI 협업 파트너 발굴, 또는 사내 AI 교육 커리큘럼 개발을 주도해보세요." },
 ];
 
+const catFeedback = {
+  "AI 기초 이해": [
+    { range:[0,3], fb:"AI의 기본 개념이 아직 낯선 단계예요. 생성형 AI와 기존 자동화 시스템의 차이부터 파악하면 현장 적용 가능성을 훨씬 넓게 볼 수 있어요.", action:"→ ChatGPT 또는 Microsoft Copilot을 직접 한 번 써보고, AI가 어떻게 답을 만드는지 관찰해보세요." },
+    { range:[4,6], fb:"기초 개념을 어느 정도 이해하고 있어요. 환각 현상이나 AI의 한계를 좀 더 구체적으로 알아두면 팀원들에게 올바른 방향을 제시할 수 있어요.", action:"→ 'AI 환각 사례'를 검색해보고, 우리 업무에서 잘못된 AI 결과가 문제가 될 수 있는 상황을 팀과 함께 정리해보세요." },
+    { range:[7,9], fb:"AI 기초를 탄탄하게 이해하고 있어요. 이 이해를 바탕으로 팀원들의 AI 오남용을 예방하고 올바른 활용 문화를 만들어갈 수 있습니다.", action:"→ 팀 내 AI 기초 설명회를 짧게(30분) 진행해보세요. 개념을 설명하는 것이 본인 이해도도 높여줍니다." },
+  ],
+  "현장·업무 활용": [
+    { range:[0,3], fb:"AI 도구를 아직 직접 써본 경험이 부족한 단계예요. 제조 현장 관리자도 보고서·메일·회의록 등 사무 업무에서 AI 효과를 바로 체감할 수 있어요.", action:"→ 이번 주 업무 보고서 초안을 ChatGPT에 맡겨보세요. 30분 절약도 좋은 출발입니다." },
+    { range:[4,6], fb:"AI 도구를 써봤지만 아직 루틴으로 자리잡지 못한 상태예요. 특정 업무 하나를 'AI 먼저'로 정해두면 사용 습관이 빠르게 생겨요.", action:"→ 회의 후 회의록 정리를 AI에게 맡기는 것을 팀 표준으로 시도해보세요." },
+    { range:[7,9], fb:"AI를 업무에 잘 활용하고 있고, 검토 습관도 갖추고 있어요. 이제는 팀 단위로 활용 사례를 공유해 조직 전체의 생산성을 끌어올릴 차례예요.", action:"→ 팀에서 가장 효과적이었던 AI 활용 사례를 월 1회 공유하는 자리를 만들어보세요." },
+  ],
+  "전략적 판단력": [
+    { range:[0,3], fb:"AI 도입의 전략적 가치를 아직 구체적으로 그려보지 못한 단계예요. 우리 팀 업무를 'AI가 도울 수 있는 것'과 '사람이 해야 하는 것'으로 나눠보는 것부터 시작할 수 있어요.", action:"→ 팀 업무 목록을 적고, AI 대체 가능성(상/중/하)을 표시해보는 간단한 맵핑을 해보세요." },
+    { range:[4,6], fb:"AI 도입 효과와 한계를 어느 정도 균형 있게 보고 있어요. 이제 구체적인 파일럿 영역을 정하고 작게 실험해보면 판단력이 훨씬 날카로워져요.", action:"→ 가장 반복적인 업무 한 가지를 골라 AI 파일럿을 설계하고, 2주 후 효과를 측정해보세요." },
+    { range:[7,9], fb:"AI의 전략적 가치를 명확히 보고 경쟁사 동향도 주시하고 있어요. 이 판단력을 조직 의사결정에 적극 반영하면 AI 전환을 선도할 수 있습니다.", action:"→ 부서 AI 활용 로드맵(6개월)을 한 장으로 정리해 경영진에 공유해보세요." },
+  ],
+  "리스크·윤리 관리": [
+    { range:[0,3], fb:"AI 사용 시 발생할 수 있는 보안·윤리 리스크를 아직 충분히 인식하지 못하고 있어요. 회사 기밀 데이터를 외부 AI에 입력하는 것이 어떤 위험을 갖는지 먼저 파악하는 것이 중요해요.", action:"→ 우리 회사 정보보호 정책에서 AI 도구 사용 관련 규정을 확인해보세요." },
+    { range:[4,6], fb:"리스크 의식을 갖고 있지만 실제 업무 프로세스에 반영하는 단계까지는 가지 못한 상태예요. 팀 내 AI 사용 기준을 간단하게라도 정해두면 사고를 예방할 수 있어요.", action:"→ '팀 AI 사용 체크리스트'(입력 금지 데이터, 결과 검토 기준)를 1페이지로 만들어 공유해보세요." },
+    { range:[7,9], fb:"보안, 편향, 인력 변화까지 폭넓게 고려하고 있어요. 이 감각을 바탕으로 조직의 AI 윤리 가이드라인을 선제적으로 설계할 수 있는 위치에 있습니다.", action:"→ 사내 AI 활용 원칙(데이터 보안·Human-in-the-loop·결과 검토 의무)을 문서화해 전사 공유를 제안해보세요." },
+  ],
+};
+
 const cats = ["AI 기초 이해","현장·업무 활용","전략적 판단력","리스크·윤리 관리"];
 let cur = 0, scores = [];
 
@@ -694,12 +739,14 @@ function showResult() {
     const s = catScore(cat);
     const m = catMeta[cat];
     const id = 'bar_' + cat.replace(/[^a-z가-힣]/gi,'_');
+    const fd = catFeedback[cat].find(f => s >= f.range[0] && s <= f.range[1]);
     return '<div class="bar-item">'
       + '<div class="bar-header">'
       + '<span class="bar-name">' + cat + '</span>'
       + '<span class="bar-score">' + s + ' / 9</span>'
       + '</div>'
       + '<div class="bar-track"><div class="bar-fill" id="' + id + '" style="background:' + m.bar + ';width:0%"></div></div>'
+      + (fd ? '<div class="bar-feedback" style="border-color:' + m.bar + '">' + fd.fb + '<div class="bar-action">' + fd.action + '</div></div>' : '')
       + '</div>';
   }).join('');
 
