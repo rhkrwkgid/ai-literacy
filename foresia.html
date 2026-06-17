@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 리터러시 진단 — Foresia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@300;400;500;700&family=Do+Hyeon&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #F4F6F8;
+  --bg1:      #E8EDF2;
+  --bg2:      #D9E0E8;
+  --bg3:      #BFC8D4;
+  --line:     rgba(0,0,0,0.08);
+  --line2:    rgba(0,0,0,0.16);
+  --ink:      #1A2130;
+  --ink2:     #4A5568;
+  --ink3:     #8896A8;
+
+  --c-navy:   #1B3A6B;
+  --c-steel:  #2E6DA4;
+  --c-green:  #1A7A4A;
+  --c-orange: #C05A10;
+
+  --serif:   'Noto Sans KR', sans-serif;
+  --display: 'Black Han Sans', sans-serif;
+  --mono:    'Do Hyeon', sans-serif;
+  --sans:    'Noto Sans KR', sans-serif;
+}
+
+html { font-size: 18px; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0;
+}
+
+#app {
+  width: 100%;
+  max-width: 480px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 3rem 1.75rem 4rem;
+  position: relative;
+}
+
+#app::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 480px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--c-navy) 30%, var(--c-steel) 70%, transparent);
+  opacity: 0.8;
+}
+
+.screen { display: none; animation: fadeUp .35s ease forwards; }
+.screen.active { display: flex; flex-direction: column; flex: 1; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── INTRO ── */
+.intro-logo {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--c-navy);
+  text-transform: uppercase;
+  margin-bottom: 2.5rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.intro-logo::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 3px;
+  background: var(--c-navy);
+  border-radius: 2px;
+}
+
+.intro-title {
+  font-family: var(--display);
+  font-size: 44px;
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--ink);
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.01em;
+}
+
+.intro-title em {
+  font-style: normal;
+  color: var(--c-steel);
+}
+
+.intro-sub {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--ink2);
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
+.intro-cats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 2.5rem;
+}
+
+.intro-cat {
+  font-size: 12px;
+  font-weight: 300;
+  padding: 5px 13px;
+  border-radius: 100px;
+  border: 1px solid;
+  letter-spacing: 0.02em;
+}
+
+.intro-meta {
+  font-size: 12px;
+  color: var(--ink3);
+  font-weight: 300;
+  line-height: 1.8;
+  margin-bottom: 3rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.btn-start {
+  align-self: flex-start;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  background: var(--c-navy);
+  border: none;
+  border-radius: 6px;
+  padding: 14px 36px;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: background .2s, transform .15s;
+}
+.btn-start:hover { background: var(--c-steel); }
+.btn-start:active { transform: scale(0.97); }
+
+/* ── QUESTION ── */
+.q-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.q-num {
+  font-family: var(--mono);
+  font-size: 56px;
+  font-weight: 400;
+  color: var(--bg3);
+  line-height: 1;
+  user-select: none;
+  letter-spacing: -0.02em;
+}
+
+.q-num span {
+  font-size: 18px;
+  color: var(--ink3);
+  font-family: var(--mono);
+  font-weight: 400;
+  vertical-align: super;
+  margin-left: 2px;
+  letter-spacing: 0;
+}
+
+.dot-prog {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  width: 120px;
+  justify-content: flex-end;
+  padding-top: 8px;
+}
+
+.dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--bg3);
+  transition: background .3s, transform .3s;
+}
+.dot.done { background: var(--ink2); }
+.dot.active { background: var(--c-navy); transform: scale(1.4); }
+
+.cat-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  padding: 4px 12px 4px 8px;
+  border-radius: 4px;
+  border: 1px solid;
+  margin-bottom: 1.25rem;
+}
+
+.cat-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.q-body {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.75;
+  color: var(--ink);
+  margin-bottom: 2.5rem;
+  flex: 1;
+  letter-spacing: 0.01em;
+}
+
+.ans-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.ans-btn {
+  background: var(--bg1);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px 6px 13px;
+  cursor: pointer;
+  text-align: center;
+  transition: background .15s, border-color .15s, transform .12s;
+  font-family: var(--sans);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink);
+}
+.ans-btn:hover { background: var(--bg2); border-color: var(--line2); }
+.ans-btn:active { transform: scale(0.95); }
+
+.ans-num {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--ink2);
+}
+
+.ans-lbl {
+  font-size: 10px;
+  font-weight: 300;
+  color: var(--ink3);
+  line-height: 1.4;
+  white-space: pre-line;
+}
+
+.q-hint {
+  font-size: 11px;
+  color: var(--ink3);
+  text-align: center;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+}
+
+/* ── RESULT ── */
+.result-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--ink3);
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.result-score-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 1rem;
+}
+
+.result-big {
+  font-size: 56px;
+  font-weight: 400;
+  font-family: var(--mono);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.result-of {
+  font-size: 14px;
+  color: var(--ink3);
+  font-weight: 300;
+  margin-bottom: 8px;
+}
+
+.result-level {
+  font-family: var(--display);
+  font-size: 30px;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.01em;
+}
+
+.result-level-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 12px;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+}
+
+.result-desc {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--ink2);
+  line-height: 1.85;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.bars-section { margin-bottom: 2rem; }
+
+.bars-title {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--ink3);
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+
+.bar-item { margin-bottom: 1.1rem; }
+.bar-item:last-child { margin-bottom: 0; }
+
+.bar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 7px;
+}
+
+.bar-name { font-size: 13px; font-weight: 400; }
+.bar-score { font-size: 12px; color: var(--ink3); font-weight: 300; }
+
+.bar-track {
+  height: 3px;
+  background: var(--bg3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  width: 0;
+  transition: width 1.1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rec-card {
+  background: var(--bg1);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.rec-label {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--ink3);
+  margin-bottom: 0.75rem;
+}
+
+.rec-text {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--ink2);
+  line-height: 1.85;
+}
+
+.btn-row { display: flex; gap: 10px; }
+
+.btn-outline {
+  flex: 1;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ink2);
+  background: transparent;
+  border: 1px solid var(--line2);
+  border-radius: 6px;
+  padding: 12px 20px;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: background .15s, color .15s;
+}
+.btn-outline:hover { background: var(--bg2); color: var(--ink); }
+.btn-outline:active { transform: scale(0.97); }
+
+.btn-solid {
+  flex: 1;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  background: var(--c-navy);
+  border: none;
+  border-radius: 6px;
+  padding: 12px 20px;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: background .15s;
+}
+.btn-solid:hover { background: var(--c-steel); }
+.btn-solid:active { transform: scale(0.97); }
+
+.copy-msg {
+  font-size: 11px;
+  color: var(--c-green);
+  text-align: center;
+  margin-top: 0.75rem;
+  min-height: 16px;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+}
+
+/* category color helpers */
+.col-navy   { color: var(--c-navy);   border-color: rgba(27,58,107,.25); }
+.col-steel  { color: var(--c-steel);  border-color: rgba(46,109,164,.25); }
+.col-green  { color: var(--c-green);  border-color: rgba(26,122,74,.25); }
+.col-orange { color: var(--c-orange); border-color: rgba(192,90,16,.25); }
+
+.bg-col-navy   { background: rgba(27,58,107,.1); }
+.bg-col-steel  { background: rgba(46,109,164,.1); }
+.bg-col-green  { background: rgba(26,122,74,.1); }
+.bg-col-orange { background: rgba(192,90,16,.1); }
+
+@media (max-width: 480px) {
+  #app { padding: 2.25rem 1.35rem 3.5rem; }
+  #app::before { width: 100%; }
+  .intro-title { font-size: 36px; }
+  .q-num { font-size: 50px; }
+  .q-body { font-size: 19px; }
+  .result-big { font-size: 50px; }
+  .result-level { font-size: 24px; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ── INTRO ── -->
+  <div class="screen active" id="s-intro">
+    <p class="intro-logo">Foresia · AI Literacy</p>
+
+    <h1 class="intro-title">
+      리더를 위한<br><em>AI 리터러시</em><br>자가 진단
+    </h1>
+
+    <p class="intro-sub">
+      제조 현장과 조직을 이끄는 관리자로서<br>
+      AI를 얼마나 이해하고 활용하고 있는지<br>솔직하게 점검해보세요.
+    </p>
+
+    <div class="intro-cats">
+      <span class="intro-cat col-navy">AI 기초 이해</span>
+      <span class="intro-cat col-steel">현장·업무 활용</span>
+      <span class="intro-cat col-green">전략적 판단력</span>
+      <span class="intro-cat col-orange">리스크·윤리 관리</span>
+    </div>
+
+    <p class="intro-meta">
+      12개 문항, 4개 영역<br>
+      소요 시간 약 3분 · 총 36점 만점<br>
+      관리자/리더 직급 기준으로 설계된 문항입니다
+    </p>
+
+    <button class="btn-start" onclick="startQuiz()">진단 시작하기</button>
+  </div>
+
+  <!-- ── QUESTION ── -->
+  <div class="screen" id="s-question">
+    <div class="q-top">
+      <div class="q-num" id="q-num">01<span>/ 12</span></div>
+      <div class="dot-prog" id="dot-prog"></div>
+    </div>
+
+    <span class="cat-tag" id="cat-tag">
+      <span class="cat-dot" id="cat-dot"></span>
+      <span id="cat-label"></span>
+    </span>
+
+    <p class="q-body" id="q-body"></p>
+
+    <div class="ans-grid" id="ans-grid"></div>
+    <p class="q-hint">선택하면 자동으로 다음 문항으로 이동합니다</p>
+  </div>
+
+  <!-- ── RESULT ── -->
+  <div class="screen" id="s-result">
+    <p class="result-eyebrow">진단 결과</p>
+
+    <div class="result-score-row">
+      <span class="result-big" id="r-total">—</span>
+      <span class="result-of">/ 36점</span>
+    </div>
+
+    <div class="result-level" id="r-level"></div>
+    <div class="result-level-badge" id="r-badge"></div>
+    <p class="result-desc" id="r-desc"></p>
+
+    <div class="bars-section">
+      <p class="bars-title">영역별 점수</p>
+      <div id="cat-bars"></div>
+    </div>
+
+    <div class="rec-card">
+      <p class="rec-label">다음 단계 추천</p>
+      <p class="rec-text" id="r-rec"></p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-outline" onclick="restart()">다시 하기</button>
+      <button class="btn-solid" onclick="copyResult()">결과 복사</button>
+    </div>
+    <p class="copy-msg" id="copy-msg"></p>
+
+  </div>
+
+</div>
+
+<script>
+const Qs = [
+  // AI 기초 이해
+  { cat:"AI 기초 이해",    q:"생성형 AI와 기존 자동화 시스템(PLC, MES 등)의 차이를 팀원에게 설명할 수 있다" },
+  { cat:"AI 기초 이해",    q:"AI가 틀린 정보를 자신 있게 내놓는 '환각(hallucination)' 현상을 알고 있다" },
+  { cat:"AI 기초 이해",    q:"머신러닝 기반 품질 예측·불량 탐지가 어떤 원리로 작동하는지 대략 이해한다" },
+  // 현장·업무 활용
+  { cat:"현장·업무 활용",  q:"ChatGPT, Copilot 등 AI 도구를 업무 보고서 작성이나 데이터 분석에 직접 써봤다" },
+  { cat:"현장·업무 활용",  q:"AI 도구를 사용해 회의록 정리, 일정 계획, 메일 초안 등 반복 업무를 줄이고 있다" },
+  { cat:"현장·업무 활용",  q:"AI가 생성한 결과물을 그대로 쓰지 않고 반드시 검토·수정한 후 활용한다" },
+  // 전략적 판단력
+  { cat:"전략적 판단력",   q:"우리 팀/부서에서 AI로 개선할 수 있는 업무 영역을 2가지 이상 구체적으로 떠올릴 수 있다" },
+  { cat:"전략적 판단력",   q:"AI 도입 시 기대 효과(비용 절감, 품질 향상 등)와 한계를 균형 있게 평가할 수 있다" },
+  { cat:"전략적 판단력",   q:"AI 활용이 우리 산업과 경쟁사에 미치는 변화 방향을 주시하고 있다" },
+  // 리스크·윤리 관리
+  { cat:"리스크·윤리 관리", q:"AI에 회사 기밀·설계 데이터·고객 정보를 입력할 때의 보안 위험을 인지하고 있다" },
+  { cat:"리스크·윤리 관리", q:"AI 판단에 지나치게 의존하지 않도록 인간 검토(Human-in-the-loop) 절차가 필요하다고 생각한다" },
+  { cat:"리스크·윤리 관리", q:"AI 활용이 현장 인력의 역할 변화와 팀 문화에 미칠 영향을 고려해본 적 있다" },
+];
+
+const Ans = [
+  { val:0, lbl:"전혀\n아니다" },
+  { val:1, lbl:"아닌\n편이다" },
+  { val:2, lbl:"그런\n편이다" },
+  { val:3, lbl:"매우\n그렇다" },
+];
+
+const catMeta = {
+  "AI 기초 이해":    { cls:"col-navy",   bg:"bg-col-navy",   dot:"#1B3A6B", bar:"#1B3A6B" },
+  "현장·업무 활용":  { cls:"col-steel",  bg:"bg-col-steel",  dot:"#2E6DA4", bar:"#2E6DA4" },
+  "전략적 판단력":   { cls:"col-green",  bg:"bg-col-green",  dot:"#1A7A4A", bar:"#1A7A4A" },
+  "리스크·윤리 관리":{ cls:"col-orange", bg:"bg-col-orange", dot:"#C05A10", bar:"#C05A10" },
+};
+
+const Levels = [
+  { max:9,  name:"AI 관망자",    badge:"OBSERVER",     badgeCls:"col-navy",
+    desc:"AI가 아직 낯설지만, 이 진단을 완료한 것 자체가 의미 있는 출발점이에요. 제조업에서도 AI 활용이 빠르게 확산되고 있어 지금부터 기초를 쌓는 것이 중요합니다.",
+    rec:"ChatGPT 무료 버전에 가입하고, 오늘 작성할 업무 보고서나 메일 초안을 AI에게 한 번 맡겨보세요." },
+  { max:18, name:"AI 탐색자",    badge:"EXPLORER",     badgeCls:"col-steel",
+    desc:"AI에 관심을 갖고 조금씩 써보는 단계예요. 지금 가장 중요한 건 사용 빈도를 높이는 것입니다. 팀 업무에 AI를 끌어들이는 작은 실험을 시작해보세요.",
+    rec:"매주 반복하는 업무 한 가지를 AI로 처리하는 루틴을 만들고, 팀원과 결과를 공유해보세요." },
+  { max:27, name:"AI 활용 리더", badge:"PRACTITIONER", badgeCls:"col-green",
+    desc:"AI를 업무에 꽤 잘 녹이고 있어요. 이제는 팀 단위 활용 범위를 넓히고, 도입 타당성을 설득력 있게 제시하는 단계입니다.",
+    rec:"부서 내 AI 활용 사례를 정리해 공유하거나, 반복 업무 자동화 파일럿 프로젝트를 기획해보세요." },
+  { max:33, name:"AI 전략가",    badge:"STRATEGIST",   badgeCls:"col-orange",
+    desc:"AI를 전략적이고 비판적으로 다루는 수준이에요. 조직 내 AI 역량을 키우는 데 선도적인 역할을 할 수 있는 위치입니다.",
+    rec:"사내 AI 활용 가이드라인 수립이나 팀 AI 리터러시 교육 프로그램 설계에 도전해보세요." },
+  { max:36, name:"AI 챔피언",    badge:"CHAMPION",     badgeCls:"col-navy",
+    desc:"기초 이해부터 리스크 관리, 전략적 판단까지 고루 갖춘 AI 리터러시 챔피언이에요. 조직의 AI 전환을 이끌 준비가 된 리더입니다.",
+    rec:"조직 AI 전략 로드맵 설계, 외부 AI 협업 파트너 발굴, 또는 사내 AI 교육 커리큘럼 개발을 주도해보세요." },
+];
+
+const cats = ["AI 기초 이해","현장·업무 활용","전략적 판단력","리스크·윤리 관리"];
+let cur = 0, scores = [];
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function startQuiz() { cur = 0; scores = []; show('s-question'); renderQ(); }
+
+function renderDots() {
+  const prog = document.getElementById('dot-prog');
+  prog.innerHTML = '';
+  Qs.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i < cur ? ' done' : i === cur ? ' active' : '');
+    prog.appendChild(d);
+  });
+}
+
+function renderQ() {
+  const q = Qs[cur];
+  const m = catMeta[q.cat];
+
+  const numEl = document.getElementById('q-num');
+  numEl.innerHTML = String(cur + 1).padStart(2, '0') + '<span>/ 12</span>';
+
+  renderDots();
+
+  const tag = document.getElementById('cat-tag');
+  tag.className = 'cat-tag ' + m.cls;
+  document.getElementById('cat-dot').style.background = m.dot;
+  document.getElementById('cat-label').textContent = q.cat;
+
+  document.getElementById('q-body').textContent = q.q;
+
+  const grid = document.getElementById('ans-grid');
+  grid.innerHTML = '';
+  Ans.forEach(a => {
+    const btn = document.createElement('button');
+    btn.className = 'ans-btn';
+    btn.innerHTML =
+      '<span class="ans-num">' + a.val + '</span>' +
+      '<span class="ans-lbl">' + a.lbl.replace('\n','<br>') + '</span>';
+    btn.onclick = () => pick(a.val);
+    grid.appendChild(btn);
+  });
+}
+
+function pick(val) {
+  scores.push(val);
+  cur++;
+  if (cur >= Qs.length) showResult();
+  else renderQ();
+}
+
+function catScore(cat) {
+  return Qs.reduce((s, q, i) => q.cat === cat ? s + (scores[i]||0) : s, 0);
+}
+
+function showResult() {
+  const total = scores.reduce((s,v) => s+v, 0);
+  const lv = Levels.find(l => total <= l.max) || Levels[Levels.length-1];
+
+  document.getElementById('r-total').textContent = total;
+  document.getElementById('r-level').textContent = lv.name;
+  document.getElementById('r-desc').textContent = lv.desc;
+  document.getElementById('r-rec').textContent = lv.rec;
+  document.getElementById('copy-msg').textContent = '';
+
+  const badgeBgMap = { 'col-navy':'bg-col-navy','col-steel':'bg-col-steel','col-green':'bg-col-green','col-orange':'bg-col-orange' };
+  const badge = document.getElementById('r-badge');
+  badge.textContent = lv.badge;
+  badge.className = 'result-level-badge ' + lv.badgeCls + ' ' + badgeBgMap[lv.badgeCls];
+
+  const barsEl = document.getElementById('cat-bars');
+  barsEl.innerHTML = cats.map(cat => {
+    const s = catScore(cat);
+    const m = catMeta[cat];
+    const id = 'bar_' + cat.replace(/[^a-z가-힣]/gi,'_');
+    return '<div class="bar-item">'
+      + '<div class="bar-header">'
+      + '<span class="bar-name">' + cat + '</span>'
+      + '<span class="bar-score">' + s + ' / 9</span>'
+      + '</div>'
+      + '<div class="bar-track"><div class="bar-fill" id="' + id + '" style="background:' + m.bar + ';width:0%"></div></div>'
+      + '</div>';
+  }).join('');
+
+  show('s-result');
+
+  setTimeout(() => {
+    cats.forEach(cat => {
+      const s = catScore(cat);
+      const id = 'bar_' + cat.replace(/[^a-z가-힣]/gi,'_');
+      const el = document.getElementById(id);
+      if (el) el.style.width = Math.round(s / 9 * 100) + '%';
+    });
+  }, 120);
+}
+
+function restart() { show('s-intro'); }
+
+function copyResult() {
+  const total = scores.reduce((s,v) => s+v, 0);
+  const lv = Levels.find(l => total <= l.max) || Levels[Levels.length-1];
+  const detail = cats.map(cat => cat + ' ' + catScore(cat) + '/9').join(' | ');
+  const text = '[Foresia AI 리터러시 진단]\n레벨: ' + lv.name + ' (' + total + '/36점)\n' + detail + '\n\n' + lv.desc;
+  navigator.clipboard.writeText(text).then(() => {
+    const m = document.getElementById('copy-msg');
+    m.textContent = '클립보드에 복사되었습니다';
+    setTimeout(() => { m.textContent = ''; }, 2500);
+  });
+}
+</script>
+</body>
+</html>
