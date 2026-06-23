@@ -363,6 +363,67 @@ body {
   margin: 1.5rem auto 0;
 }
 
+/* domain detail cards */
+.detail-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--slate);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 1.75rem 0 0.75rem;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.detail-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-s);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.detail-card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.detail-card-head .dc-icon { font-size: 16px; }
+.detail-card-head .dc-name { flex: 1; }
+.detail-card-head .dc-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 20px;
+}
+.detail-card-body {
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--text);
+  border-top: 1px solid var(--border);
+}
+.detail-card-body .cause {
+  color: var(--slate);
+  margin-bottom: 8px;
+}
+.detail-card-body ul {
+  padding-left: 18px;
+  margin-top: 4px;
+}
+.detail-card-body ul li {
+  margin-bottom: 4px;
+}
+.detail-card.high .detail-card-head { background: var(--red-50); }
+.detail-card.high .detail-card-head .dc-name { color: var(--red-700); }
+.detail-card.high .detail-card-head .dc-badge { background: var(--red-100); color: var(--red-700); }
+.detail-card.mid .detail-card-head { background: var(--ora-50); }
+.detail-card.mid .detail-card-head .dc-name { color: var(--ora-600); }
+.detail-card.mid .detail-card-head .dc-badge { background: var(--ora-100); color: var(--ora-600); }
+.detail-card.low .detail-card-head { background: var(--grn-50); }
+.detail-card.low .detail-card-head .dc-name { color: var(--grn-600); }
+.detail-card.low .detail-card-head .dc-badge { background: var(--grn-100); color: var(--grn-600); }
+
 /* note */
 .note {
   text-align: center;
@@ -446,6 +507,8 @@ body {
       </div>
 
       <div class="feedback" id="rFeedback"></div>
+
+      <div id="rDomainDetail"></div>
     </div>
 
     <p class="note">
@@ -532,6 +595,63 @@ const DOMAINS = [
     ]
   }
 ];
+
+const DOMAIN_DETAIL = {
+  demand: {
+    cause: '업무량 과부하나 시간 압박이 주요 원인입니다. 처리해야 할 일이 많아 퇴근 후에도 업무 생각을 놓지 못하는 상태입니다.',
+    tips: [
+      '업무를 긴급/중요 매트릭스로 분류하고 우선순위를 정하세요.',
+      '하루 집중 업무 시간을 정하고 그 외 시간엔 알림을 끄세요.',
+      '상사에게 업무량 조율을 요청하거나 업무 재배분 가능성을 논의해 보세요.',
+      '퇴근 후 "업무 종료 루틴"(짧은 산책, 음악 등)을 만들어 심리적으로 전환하세요.'
+    ]
+  },
+  control: {
+    cause: '업무 방식이나 속도를 스스로 결정할 자율성이 부족한 상태입니다. 지시에만 따라 움직이는 환경이 무력감을 유발합니다.',
+    tips: [
+      '작은 범위에서라도 자신이 결정할 수 있는 업무 방식을 찾아보세요.',
+      '자율성 확대에 대해 상사와 정기적인 1:1 면담을 통해 이야기하세요.',
+      '업무 목표를 스스로 수립하고 진행 과정을 기록하는 자기 주도 방식을 시도해 보세요.',
+      '자율성이 높은 프로젝트나 역할에 자발적으로 참여해 보세요.'
+    ]
+  },
+  support: {
+    cause: '상사나 동료로부터 충분한 지원과 공감을 받지 못하고 있습니다. 혼자 문제를 해결해야 한다는 고립감이 스트레스를 증폭시킵니다.',
+    tips: [
+      '도움을 요청하는 것을 부담으로 여기지 말고 협업의 일환으로 받아들이세요.',
+      '팀 내 소통 채널(정기 미팅, 메신저 채널)을 적극 활용하세요.',
+      '상사에게 피드백과 지원을 구체적으로 요청하는 습관을 기르세요.',
+      '직장 외 멘토나 동료 네트워크를 통해 정서적 지지를 얻으세요.'
+    ]
+  },
+  relation: {
+    cause: '동료 또는 상사와의 갈등, 따돌림, 언어적 불편함이 직장 내 심리적 안전감을 낮추고 있습니다.',
+    tips: [
+      '갈등 상황은 감정이 가라앉은 후 사실 중심으로 대화하세요.',
+      '불편한 관계는 HR 또는 신뢰할 수 있는 제3자에게 도움을 구하세요.',
+      '일상적인 인사, 짧은 감사 표현 등 긍정적인 관계 유지 습관을 쌓으세요.',
+      '심각한 괴롭힘이라면 반드시 공식적인 채널(고충처리위원회 등)을 통해 대응하세요.'
+    ]
+  },
+  conflict: {
+    cause: '고용 불안이나 조직 변화에 대한 불확실성이 만성적인 불안과 긴장을 만들어냅니다.',
+    tips: [
+      '자신이 통제할 수 있는 것(역량 강화, 성과 관리)에 집중하세요.',
+      '이직 가능성이나 대안 경로를 구체적으로 탐색해 두면 불안이 줄어들 수 있습니다.',
+      '조직 변화 정보를 리더십과의 소통을 통해 사전에 파악하려 노력하세요.',
+      '불확실성에 대한 불안을 일기나 코칭을 통해 외부화(verbalize)하세요.'
+    ]
+  },
+  organization: {
+    cause: '불명확한 지침, 배제된 의사결정, 자원 부족 등 조직 구조적 문제가 업무 효율과 심리적 소진을 유발하고 있습니다.',
+    tips: [
+      '역할과 기대치가 불명확하다면 상사에게 구체적인 업무 기준을 요청하세요.',
+      '의견 반영 기회(팀 회의, 익명 피드백)를 적극 활용하세요.',
+      '필요한 자원이 부족하다면 조달 프로세스를 공식적으로 요청하세요.',
+      '조직 구조 개선은 단기에 어렵지만, 나에게 맞는 부서 이동도 고려해 보세요.'
+    ]
+  }
+};
 
 const TOTAL_Q = 24;
 const answers = {};
@@ -632,17 +752,17 @@ function calcScore() {
     level = '높음 (High)';
     badgeBg = '#FED7D7'; badgeColor = '#9B2C2C';
     fbTitle = '직무 스트레스 수준이 높습니다.';
-    fbText = '업무 부담, 관계 갈등, 또는 조직 환경에서 상당한 스트레스를 경험하고 있을 수 있습니다. 지금 바로 스트레스 관리 방법을 찾고, 필요하다면 전문 상담이나 EAP(직원 지원 프로그램)를 활용해 보세요. 충분한 수면·규칙적인 운동·신뢰할 수 있는 사람과의 대화가 도움이 됩니다.';
+    fbText = '여러 영역에서 상당한 스트레스를 경험하고 있습니다. 이 상태가 지속되면 번아웃, 수면 장애, 신체 증상으로 이어질 수 있습니다. 지금 당장 스트레스 원인을 파악하고 아래 영역별 구체적인 관리 전략을 시작하세요. 필요하다면 전문 상담이나 EAP(직원 지원 프로그램)를 적극 활용하길 권장합니다.';
   } else if (pct >= 34) {
     level = '보통 (Moderate)';
     badgeBg = '#FEEBC8'; badgeColor = '#744210';
     fbTitle = '직무 스트레스 수준이 보통입니다.';
-    fbText = '일부 영역에서 스트레스를 느끼고 있습니다. 특히 점수가 높은 하위 영역에 주목해 보세요. 업무 우선순위 조정, 동료·상사와의 소통 개선, 규칙적인 자기 관리를 통해 스트레스를 줄여나갈 수 있습니다.';
+    fbText = '일부 영역에서 스트레스를 느끼고 있으며, 방치하면 높은 수준으로 악화될 수 있습니다. 아래에서 높게 나온 영역을 중심으로 지금부터 작은 변화를 시작해 보세요. 업무 우선순위 조정, 소통 개선, 규칙적인 자기 관리가 핵심입니다.';
   } else {
     level = '낮음 (Low)';
     badgeBg = '#C6F6D5'; badgeColor = '#22543D';
     fbTitle = '직무 스트레스 수준이 낮은 편입니다.';
-    fbText = '현재 직무 환경에 비교적 잘 적응하고 있습니다. 이 상태를 유지하면서 번아웃 예방을 위한 예방적 자기 관리를 지속해 보세요. 업무와 생활의 균형을 유지하는 것이 장기적인 웰빙에 중요합니다.';
+    fbText = '현재 직무 환경에 비교적 잘 적응하고 있습니다. 좋은 상태를 유지하기 위해 번아웃 예방에 관심을 기울이세요. 업무-생활 균형, 정기적인 자기 점검, 충분한 휴식이 장기적 웰빙의 핵심입니다.';
   }
 
   document.getElementById('rBadge').innerHTML =
@@ -673,6 +793,43 @@ function calcScore() {
       document.getElementById('dbar-' + d.key).style.width = barPct + '%';
     });
   }, 80);
+
+  // domain detail cards
+  const detailWrap = document.getElementById('rDomainDetail');
+  detailWrap.innerHTML = '';
+  const sortedDomains = [...DOMAINS].sort((a, b) => {
+    const pa = Math.round(((domScores[a.key] - a.items.length) / (a.items.length * 5 - a.items.length)) * 100);
+    const pb = Math.round(((domScores[b.key] - b.items.length) / (b.items.length * 5 - b.items.length)) * 100);
+    return pb - pa;
+  });
+
+  const titleEl = document.createElement('div');
+  titleEl.className = 'detail-section-title';
+  titleEl.textContent = '영역별 상세 분석 및 관리 전략';
+  detailWrap.appendChild(titleEl);
+
+  sortedDomains.forEach(d => {
+    const max = d.items.length * 5;
+    const barPct = Math.round(((domScores[d.key] - d.items.length) / (max - d.items.length)) * 100);
+    const tier = barPct >= 67 ? 'high' : barPct >= 34 ? 'mid' : 'low';
+    const tierLabel = barPct >= 67 ? '주의 필요' : barPct >= 34 ? '보통' : '양호';
+    const detail = DOMAIN_DETAIL[d.key];
+
+    const card = document.createElement('div');
+    card.className = `detail-card ${tier}`;
+    card.innerHTML = `
+      <div class="detail-card-head">
+        <span class="dc-icon">${d.icon}</span>
+        <span class="dc-name">${d.name}</span>
+        <span class="dc-badge">${tierLabel} · ${barPct}%</span>
+      </div>
+      <div class="detail-card-body">
+        <div class="cause">💡 ${detail.cause}</div>
+        <strong style="font-size:12px;color:#64748b;">실천 전략</strong>
+        <ul>${detail.tips.map(t => `<li>${t}</li>`).join('')}</ul>
+      </div>`;
+    detailWrap.appendChild(card);
+  });
 
   // radar chart
   const labels = DOMAINS.map(d => d.name);
