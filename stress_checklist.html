@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>직무 스트레스 체크리스트 (K-OSI)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --red-50:  #FFF5F5;
+  --red-100: #FED7D7;
+  --red-400: #FC8181;
+  --red-600: #C53030;
+  --red-700: #9B2C2C;
+  --ora-50:  #FFFAF0;
+  --ora-100: #FEEBC8;
+  --ora-400: #F6AD55;
+  --ora-600: #C05621;
+  --grn-50:  #F0FFF4;
+  --grn-100: #C6F6D5;
+  --grn-600: #276749;
+  --slate:   #64748b;
+  --slate-l: #94a3b8;
+  --border:  #e2e8f0;
+  --bg:      #f8fafc;
+  --white:   #ffffff;
+  --text:    #1e293b;
+  --radius:  12px;
+  --radius-s: 8px;
+}
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+.site-header {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 2.5rem 1.5rem 1.75rem;
+  text-align: center;
+}
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--red-600);
+  margin-bottom: 10px;
+}
+.site-header h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+.site-header .sub {
+  font-size: 14px;
+  color: var(--slate);
+  max-width: 500px;
+  margin: 0 auto 20px;
+  line-height: 1.7;
+}
+.scale-guide {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.scale-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 13px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 12px;
+  color: var(--slate);
+}
+.scale-num {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--text);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ── PROGRESS ── */
+.prog-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 1.25rem;
+}
+.prog-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.prog-label { font-size: 12px; color: var(--slate); white-space: nowrap; }
+.prog-track {
+  flex: 1;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.prog-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--red-400), var(--red-600));
+  border-radius: 3px;
+  width: 0%;
+  transition: width .3s ease;
+}
+.prog-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* ── MAIN ── */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 5rem;
+}
+
+/* ── DOMAIN SECTION ── */
+.domain {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+.domain-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 20px;
+  border-bottom: 1px solid var(--border);
+  background: #fafafa;
+}
+.domain-icon {
+  width: 30px; height: 30px;
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  background: var(--red-50);
+  color: var(--red-600);
+}
+.domain-head h2 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  flex: 1;
+}
+.domain-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 20px;
+  background: var(--red-600);
+  color: var(--white);
+}
+
+/* ── ITEM ── */
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  transition: background .1s;
+}
+.item:last-child { border-bottom: none; }
+.item:hover { background: var(--bg); }
+.item-num {
+  font-size: 11px;
+  font-weight: 700;
+  color: #cbd5e1;
+  min-width: 22px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.item-text {
+  flex: 1;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--text);
+}
+.item-text.reversed::after {
+  content: ' (역문항)';
+  font-size: 11px;
+  color: var(--slate-l);
+  font-weight: 400;
+}
+.rg {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.rb {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  color: var(--slate);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .12s;
+  outline: none;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.rb:hover { border-color: var(--red-600); color: var(--red-600); background: var(--red-50); }
+.rb.on { background: var(--red-600); border-color: var(--red-600); color: var(--white); }
+.rb:focus-visible { box-shadow: 0 0 0 3px rgba(197,48,48,.25); }
+
+/* ── ACTIONS ── */
+.action-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 2rem;
+}
+.btn {
+  padding: 12px 30px;
+  border-radius: var(--radius-s);
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Noto Sans KR', sans-serif;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  color: var(--text);
+  transition: all .13s;
+}
+.btn:hover { background: var(--bg); border-color: #cbd5e1; }
+.btn.primary {
+  background: var(--red-600);
+  color: var(--white);
+  border-color: var(--red-600);
+}
+.btn.primary:hover { background: var(--red-700); border-color: var(--red-700); }
+
+/* ── RESULT ── */
+#result { display: none; margin-top: 2.5rem; }
+#result.show { display: block; }
+
+.result-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin-bottom: 1.25rem;
+}
+.result-card h2 {
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+/* total */
+.total-wrap {
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+.total-label { font-size: 13px; color: var(--slate); font-weight: 500; margin-bottom: 6px; }
+.total-val { font-size: 52px; font-weight: 700; line-height: 1; letter-spacing: -0.03em; }
+.total-max { font-size: 14px; color: var(--slate); margin-top: 4px; }
+.level-badge {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 5px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* gauge */
+.gauge-wrap {
+  margin: 1.5rem 0;
+  position: relative;
+}
+.gauge-track {
+  height: 14px;
+  background: var(--border);
+  border-radius: 7px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+.gauge-fill {
+  height: 100%;
+  border-radius: 7px;
+  transition: width .8s cubic-bezier(.22,1,.36,1);
+  width: 0%;
+}
+.gauge-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--slate-l);
+}
+
+/* domain bars */
+.domain-bars { display: flex; flex-direction: column; gap: 10px; margin: 1.5rem 0; }
+.dbar-row { display: flex; align-items: center; gap: 10px; }
+.dbar-name { font-size: 12px; font-weight: 600; color: var(--text); min-width: 80px; flex-shrink: 0; }
+.dbar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.dbar-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--red-600);
+  transition: width .7s cubic-bezier(.22,1,.36,1);
+  width: 0%;
+}
+.dbar-score { font-size: 12px; font-weight: 600; color: var(--text); min-width: 40px; text-align: right; }
+
+/* feedback */
+.feedback {
+  background: var(--red-50);
+  border-left: 4px solid var(--red-600);
+  border-radius: 0 var(--radius-s) var(--radius-s) 0;
+  padding: 1rem 1.25rem;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--red-700);
+  margin-top: 1.25rem;
+}
+.feedback strong { font-weight: 700; display: block; margin-bottom: 4px; }
+
+/* chart */
+.chart-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  height: 320px;
+  margin: 1.5rem auto 0;
+}
+
+/* note */
+.note {
+  text-align: center;
+  font-size: 11px;
+  color: #b0b9c6;
+  margin-top: 1rem;
+  line-height: 1.7;
+}
+
+@media (max-width: 540px) {
+  .item { flex-wrap: wrap; gap: 8px; }
+  .rg { justify-content: flex-end; width: 100%; }
+  .rb { width: 38px; height: 38px; font-size: 13px; }
+  .dbar-name { min-width: 60px; font-size: 11px; }
+  .site-header h1 { font-size: 21px; }
+  .total-val { font-size: 42px; }
+}
+@media print {
+  .prog-bar, .action-row { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <p class="eyebrow">Occupational Stress Inventory</p>
+  <h1>직무 스트레스 체크리스트</h1>
+  <p class="sub">최근 한 달 동안 직장에서 경험한 상황을 떠올리며, 각 문항이 얼마나 해당되는지 솔직하게 응답해 주세요.</p>
+  <div class="scale-guide">
+    <div class="scale-item"><span class="scale-num">1</span> 전혀 그렇지 않다</div>
+    <div class="scale-item"><span class="scale-num">2</span> 그렇지 않다</div>
+    <div class="scale-item"><span class="scale-num">3</span> 보통이다</div>
+    <div class="scale-item"><span class="scale-num">4</span> 그렇다</div>
+    <div class="scale-item"><span class="scale-num">5</span> 매우 그렇다</div>
+  </div>
+</header>
+
+<div class="prog-bar" role="status" aria-live="polite">
+  <div class="prog-inner">
+    <span class="prog-label">응답 진행</span>
+    <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+    <span class="prog-count"><span id="progNum">0</span> / 24</span>
+  </div>
+</div>
+
+<main class="container">
+  <div id="sections"></div>
+
+  <div class="action-row">
+    <button class="btn primary" onclick="calcScore()">결과 보기</button>
+    <button class="btn" onclick="resetAll()">초기화</button>
+  </div>
+
+  <!-- 결과 -->
+  <section id="result" aria-label="결과">
+    <div class="result-card">
+      <h2>나의 직무 스트레스 결과</h2>
+
+      <div class="total-wrap">
+        <div class="total-label">전체 스트레스 점수</div>
+        <div class="total-val" id="rTotal">–</div>
+        <div class="total-max">/ 120점</div>
+        <div id="rBadge"></div>
+      </div>
+
+      <div class="gauge-wrap">
+        <div class="gauge-track">
+          <div class="gauge-fill" id="gFill"></div>
+        </div>
+        <div class="gauge-ticks">
+          <span>낮음 (24)</span>
+          <span>보통 (72)</span>
+          <span>높음 (120)</span>
+        </div>
+      </div>
+
+      <div class="domain-bars" id="rDomainBars"></div>
+
+      <div class="chart-wrap">
+        <canvas id="radarChart" role="img" aria-label="직무 스트레스 6개 하위 영역 레이더 차트">직무 스트레스 하위 영역별 점수 시각화</canvas>
+      </div>
+
+      <div class="feedback" id="rFeedback"></div>
+    </div>
+
+    <p class="note">
+      본 체크리스트는 K-OSI(Korean Occupational Stress Inventory)를 기반으로 구성되었으며,<br>
+      전문적인 진단이나 의료적 조언을 대체하지 않습니다.
+    </p>
+
+    <div class="action-row">
+      <button class="btn" onclick="resetAll()">다시 하기</button>
+    </div>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// ── 문항 정의 ──────────────────────────────────────────
+// reversed: true → 역채점 (6-score)
+// max: 영역 최대 점수 (문항수 × 5)
+const DOMAINS = [
+  {
+    key: 'demand',
+    name: '업무 요구',
+    icon: '📋',
+    items: [
+      { q: '나는 해야 할 일이 너무 많다.', r: false },
+      { q: '업무 시간이 부족해서 일을 빨리 처리해야 한다.', r: false },
+      { q: '내 업무는 정신적으로 매우 힘들다.', r: false },
+      { q: '나는 업무 외 시간에도 일에 대해 생각한다.', r: false },
+    ]
+  },
+  {
+    key: 'control',
+    name: '업무 자율성',
+    icon: '🎯',
+    items: [
+      { q: '나는 내 업무 방식을 스스로 결정할 수 있다.', r: true },
+      { q: '나는 업무 속도를 내 스스로 조절할 수 있다.', r: true },
+      { q: '나는 언제 휴식을 취할지 스스로 결정할 수 있다.', r: true },
+      { q: '나는 내 업무 내용을 직접 선택할 수 있다.', r: true },
+    ]
+  },
+  {
+    key: 'support',
+    name: '사회적 지지',
+    icon: '🤝',
+    items: [
+      { q: '나는 상사로부터 충분한 지원을 받고 있다.', r: true },
+      { q: '동료들과 어려운 일이 있을 때 서로 도와줄 수 있다.', r: true },
+      { q: '나는 동료들로부터 도움을 받을 수 있다.', r: true },
+      { q: '상사는 내 업무 성과에 관심을 가져준다.', r: true },
+    ]
+  },
+  {
+    key: 'relation',
+    name: '직장 내 관계',
+    icon: '👥',
+    items: [
+      { q: '직장 내에서 따돌림이나 무시를 당한 적이 있다.', r: false },
+      { q: '상사나 동료로부터 언어적·정서적 폭력을 경험한 적이 있다.', r: false },
+      { q: '직장 내 갈등이 빈번하게 발생한다.', r: false },
+      { q: '내 직장 내 인간관계는 전반적으로 불편하다.', r: false },
+    ]
+  },
+  {
+    key: 'conflict',
+    name: '직무 불안정',
+    icon: '⚡',
+    items: [
+      { q: '나는 직업을 잃을 것 같은 불안감을 느낀다.', r: false },
+      { q: '나의 고용 상태가 불안정하다고 느낀다.', r: false },
+      { q: '나는 원치 않는 부서 이동이나 직무 변경이 걱정된다.', r: false },
+      { q: '조직 내 분위기가 불안정하여 미래가 걱정된다.', r: false },
+    ]
+  },
+  {
+    key: 'organization',
+    name: '조직 체계',
+    icon: '🏢',
+    items: [
+      { q: '나는 내 업무에 대해 명확한 지침을 받지 못한다.', r: false },
+      { q: '의사결정 과정에서 내 의견은 반영되지 않는다.', r: false },
+      { q: '조직의 정책이나 규정이 업무를 방해한다.', r: false },
+      { q: '업무에 필요한 정보나 자원이 충분히 지원되지 않는다.', r: false },
+    ]
+  }
+];
+
+const TOTAL_Q = 24;
+const answers = {};
+let chart = null;
+
+// ── Build UI ───────────────────────────────────────────
+function buildSections() {
+  const wrap = document.getElementById('sections');
+  let qIdx = 0;
+  DOMAINS.forEach(domain => {
+    const sec = document.createElement('div');
+    sec.className = 'domain';
+    sec.id = 'sec-' + domain.key;
+
+    const head = document.createElement('div');
+    head.className = 'domain-head';
+    head.innerHTML = `
+      <div class="domain-icon" aria-hidden="true">${domain.icon}</div>
+      <h2>${domain.name}</h2>
+      <span class="domain-tag">${domain.items.length}문항</span>`;
+    sec.appendChild(head);
+
+    domain.items.forEach((item, i) => {
+      const id = `${domain.key}_${i}`;
+      qIdx++;
+      const div = document.createElement('div');
+      div.className = 'item';
+      div.innerHTML = `
+        <span class="item-num">${qIdx}</span>
+        <span class="item-text${item.r ? ' reversed' : ''}">${item.q}</span>
+        <div class="rg" role="radiogroup" aria-label="문항 ${qIdx} 응답">
+          ${[1,2,3,4,5].map(v =>
+            `<button class="rb" id="rb-${id}-${v}" aria-label="${v}점" aria-pressed="false"
+              onclick="pick('${domain.key}',${i},${v},${item.r})">${v}</button>`
+          ).join('')}
+        </div>`;
+      sec.appendChild(div);
+    });
+    wrap.appendChild(sec);
+  });
+}
+
+// ── Pick ───────────────────────────────────────────────
+function pick(key, idx, val, isReversed) {
+  [1,2,3,4,5].forEach(v => {
+    const el = document.getElementById(`rb-${key}_${idx}-${v}`);
+    el.classList.remove('on');
+    el.setAttribute('aria-pressed', 'false');
+  });
+  document.getElementById(`rb-${key}_${idx}-${val}`).classList.add('on');
+  document.getElementById(`rb-${key}_${idx}-${val}`).setAttribute('aria-pressed', 'true');
+  const scored = isReversed ? (6 - val) : val;
+  if (!answers[key]) answers[key] = {};
+  answers[key][idx] = scored;
+  updateProgress();
+}
+
+function updateProgress() {
+  const done = Object.values(answers).reduce((t, d) => t + Object.keys(d).length, 0);
+  const pct = Math.round((done / TOTAL_Q) * 100);
+  document.getElementById('progFill').style.width = pct + '%';
+  document.getElementById('progNum').textContent = done;
+}
+
+// ── Calc ───────────────────────────────────────────────
+function calcScore() {
+  for (const domain of DOMAINS) {
+    const filled = answers[domain.key] ? Object.keys(answers[domain.key]).length : 0;
+    if (filled < domain.items.length) {
+      alert(`'${domain.name}' 영역의 모든 문항에 응답해 주세요.`);
+      document.getElementById('sec-' + domain.key).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+  }
+
+  const domScores = {};
+  let total = 0;
+  DOMAINS.forEach(d => {
+    const s = Object.values(answers[d.key]).reduce((a, b) => a + b, 0);
+    domScores[d.key] = s;
+    total += s;
+  });
+
+  const pct = Math.round(((total - 24) / (120 - 24)) * 100);
+
+  // total display
+  document.getElementById('rTotal').textContent = total;
+
+  // gauge
+  const gFill = document.getElementById('gFill');
+  const gaugeColor = pct >= 67 ? '#C53030' : pct >= 34 ? '#C05621' : '#276749';
+  gFill.style.background = gaugeColor;
+  setTimeout(() => { gFill.style.width = pct + '%'; }, 60);
+
+  // level badge
+  let level, badgeBg, badgeColor, fbTitle, fbText;
+  if (pct >= 67) {
+    level = '높음 (High)';
+    badgeBg = '#FED7D7'; badgeColor = '#9B2C2C';
+    fbTitle = '직무 스트레스 수준이 높습니다.';
+    fbText = '업무 부담, 관계 갈등, 또는 조직 환경에서 상당한 스트레스를 경험하고 있을 수 있습니다. 지금 바로 스트레스 관리 방법을 찾고, 필요하다면 전문 상담이나 EAP(직원 지원 프로그램)를 활용해 보세요. 충분한 수면·규칙적인 운동·신뢰할 수 있는 사람과의 대화가 도움이 됩니다.';
+  } else if (pct >= 34) {
+    level = '보통 (Moderate)';
+    badgeBg = '#FEEBC8'; badgeColor = '#744210';
+    fbTitle = '직무 스트레스 수준이 보통입니다.';
+    fbText = '일부 영역에서 스트레스를 느끼고 있습니다. 특히 점수가 높은 하위 영역에 주목해 보세요. 업무 우선순위 조정, 동료·상사와의 소통 개선, 규칙적인 자기 관리를 통해 스트레스를 줄여나갈 수 있습니다.';
+  } else {
+    level = '낮음 (Low)';
+    badgeBg = '#C6F6D5'; badgeColor = '#22543D';
+    fbTitle = '직무 스트레스 수준이 낮은 편입니다.';
+    fbText = '현재 직무 환경에 비교적 잘 적응하고 있습니다. 이 상태를 유지하면서 번아웃 예방을 위한 예방적 자기 관리를 지속해 보세요. 업무와 생활의 균형을 유지하는 것이 장기적인 웰빙에 중요합니다.';
+  }
+
+  document.getElementById('rBadge').innerHTML =
+    `<span class="level-badge" style="background:${badgeBg};color:${badgeColor}">${level}</span>`;
+  document.getElementById('rFeedback').innerHTML =
+    `<strong>${fbTitle}</strong>${fbText}`;
+
+  // domain bars
+  const barsWrap = document.getElementById('rDomainBars');
+  barsWrap.innerHTML = '';
+  DOMAINS.forEach(d => {
+    const score = domScores[d.key];
+    const max = d.items.length * 5;
+    const barPct = Math.round(((score - d.items.length) / (max - d.items.length)) * 100);
+    const barColor = barPct >= 67 ? '#C53030' : barPct >= 34 ? '#C05621' : '#276749';
+    const row = document.createElement('div');
+    row.className = 'dbar-row';
+    row.innerHTML = `
+      <span class="dbar-name">${d.name}</span>
+      <div class="dbar-track"><div class="dbar-fill" id="dbar-${d.key}" style="background:${barColor}"></div></div>
+      <span class="dbar-score">${score}/${max}</span>`;
+    barsWrap.appendChild(row);
+  });
+  setTimeout(() => {
+    DOMAINS.forEach(d => {
+      const max = d.items.length * 5;
+      const barPct = Math.round(((domScores[d.key] - d.items.length) / (max - d.items.length)) * 100);
+      document.getElementById('dbar-' + d.key).style.width = barPct + '%';
+    });
+  }, 80);
+
+  // radar chart
+  const labels = DOMAINS.map(d => d.name);
+  const dataVals = DOMAINS.map(d => {
+    const max = d.items.length * 5;
+    return Math.round(((domScores[d.key] - d.items.length) / (max - d.items.length)) * 100);
+  });
+
+  if (chart) chart.destroy();
+  chart = new Chart(document.getElementById('radarChart'), {
+    type: 'radar',
+    data: {
+      labels,
+      datasets: [{
+        label: '스트레스 수준 (%)',
+        data: dataVals,
+        backgroundColor: 'rgba(197,48,48,0.1)',
+        borderColor: '#C53030',
+        borderWidth: 2,
+        pointBackgroundColor: '#C53030',
+        pointRadius: 5,
+        pointHoverRadius: 7
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        r: {
+          min: 0, max: 100,
+          ticks: {
+            stepSize: 25,
+            font: { size: 10, family: 'Noto Sans KR' },
+            color: '#94a3b8',
+            callback: v => v + '%'
+          },
+          pointLabels: {
+            font: { size: 12, family: 'Noto Sans KR', weight: '600' },
+            color: '#334155'
+          },
+          grid: { color: '#e2e8f0' },
+          angleLines: { color: '#e2e8f0' }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ' ' + ctx.raw + '%' } }
+      }
+    }
+  });
+
+  const res = document.getElementById('result');
+  res.classList.add('show');
+  res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── Reset ──────────────────────────────────────────────
+function resetAll() {
+  DOMAINS.forEach(d => {
+    d.items.forEach((_, i) => {
+      [1,2,3,4,5].forEach(v => {
+        const el = document.getElementById(`rb-${d.key}_${i}-${v}`);
+        if (el) { el.classList.remove('on'); el.setAttribute('aria-pressed','false'); }
+      });
+    });
+    delete answers[d.key];
+  });
+  if (chart) { chart.destroy(); chart = null; }
+  document.getElementById('result').classList.remove('show');
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Init ───────────────────────────────────────────────
+buildSections();
+updateProgress();
+</script>
+</body>
+</html>

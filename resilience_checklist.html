@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>회복탄력성 체크리스트</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ctrl: #185FA5;
+    --ctrl-light: #E6F1FB;
+    --ctrl-dark: #0C447C;
+    --rel: #0F6E56;
+    --rel-light: #E1F5EE;
+    --rel-dark: #085041;
+    --pos: #854F0B;
+    --pos-light: #FAEEDA;
+    --pos-dark: #633806;
+    --text: #1a1a1a;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --bg: #f9fafb;
+    --white: #ffffff;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  .page-header {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 2.5rem 1.5rem 2rem;
+    text-align: center;
+  }
+  .page-header .eyebrow {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .page-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .page-header p {
+    font-size: 14px;
+    color: var(--text-muted);
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .legend-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .legend-num {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--text);
+    color: var(--white);
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── Main layout ── */
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+  }
+
+  /* ── Section ── */
+  .section {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-size: 15px;
+    font-weight: 700;
+    flex: 1;
+  }
+  .section-badge {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  /* ctrl theme */
+  .ctrl .section-icon { background: var(--ctrl-light); color: var(--ctrl); }
+  .ctrl .section-header { background: var(--ctrl-light); }
+  .ctrl .section-header h2 { color: var(--ctrl-dark); }
+  .ctrl .section-badge { background: var(--ctrl); color: var(--white); }
+  .ctrl .radio-btn.selected { background: var(--ctrl); border-color: var(--ctrl); color: var(--white); }
+  .ctrl .radio-btn:hover { border-color: var(--ctrl); color: var(--ctrl); }
+
+  /* rel theme */
+  .rel .section-icon { background: var(--rel-light); color: var(--rel); }
+  .rel .section-header { background: var(--rel-light); }
+  .rel .section-header h2 { color: var(--rel-dark); }
+  .rel .section-badge { background: var(--rel); color: var(--white); }
+  .rel .radio-btn.selected { background: var(--rel); border-color: var(--rel); color: var(--white); }
+  .rel .radio-btn:hover { border-color: var(--rel); color: var(--rel); }
+
+  /* pos theme */
+  .pos .section-icon { background: var(--pos-light); color: var(--pos); }
+  .pos .section-header { background: var(--pos-light); }
+  .pos .section-header h2 { color: var(--pos-dark); }
+  .pos .section-badge { background: var(--pos); color: var(--white); }
+  .pos .radio-btn.selected { background: var(--pos); border-color: var(--pos); color: var(--white); }
+  .pos .radio-btn:hover { border-color: var(--pos); color: var(--pos); }
+
+  /* ── Item ── */
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 20px;
+    border-bottom: 1px solid var(--border);
+    transition: background .12s;
+  }
+  .item:last-child { border-bottom: none; }
+  .item:hover { background: var(--bg); }
+  .item-num {
+    font-size: 12px;
+    color: #b0b5bd;
+    min-width: 22px;
+    font-weight: 500;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .item-text {
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text);
+  }
+  .radio-group {
+    display: flex;
+    gap: 5px;
+    flex-shrink: 0;
+  }
+  .radio-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .13s;
+    user-select: none;
+    outline: none;
+  }
+  .radio-btn:focus-visible { box-shadow: 0 0 0 3px rgba(24,95,165,0.3); }
+
+  /* ── Progress ── */
+  .progress-bar-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 1.25rem;
+  }
+  .progress-inner {
+    max-width: 780px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .progress-label { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+  .progress-track {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--ctrl), var(--rel));
+    border-radius: 3px;
+    width: 0%;
+    transition: width .3s ease;
+  }
+  .progress-count { font-size: 12px; font-weight: 600; color: var(--text); white-space: nowrap; }
+
+  /* ── Action buttons ── */
+  .action-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+  .btn {
+    padding: 12px 28px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    color: var(--text);
+    transition: all .15s;
+  }
+  .btn:hover { background: var(--bg); border-color: #d1d5db; }
+  .btn.primary {
+    background: var(--ctrl);
+    color: var(--white);
+    border-color: var(--ctrl);
+  }
+  .btn.primary:hover { background: var(--ctrl-dark); border-color: var(--ctrl-dark); }
+
+  /* ── Result ── */
+  #result-section { display: none; }
+  #result-section.show { display: block; }
+
+  .result-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  .result-card h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .score-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 1.5rem;
+  }
+  .score-box {
+    border-radius: var(--radius-sm);
+    padding: 1.1rem 0.75rem;
+    text-align: center;
+  }
+  .score-box .slabel { font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+  .score-box .sval { font-size: 30px; font-weight: 700; line-height: 1; }
+  .score-box .smax { font-size: 12px; margin-top: 3px; }
+  .score-box.ctrl { background: var(--ctrl-light); }
+  .score-box.ctrl .slabel, .score-box.ctrl .smax { color: var(--ctrl); }
+  .score-box.ctrl .sval { color: var(--ctrl-dark); }
+  .score-box.rel { background: var(--rel-light); }
+  .score-box.rel .slabel, .score-box.rel .smax { color: var(--rel); }
+  .score-box.rel .sval { color: var(--rel-dark); }
+  .score-box.pos { background: var(--pos-light); }
+  .score-box.pos .slabel, .score-box.pos .smax { color: var(--pos); }
+  .score-box.pos .sval { color: var(--pos-dark); }
+
+  .total-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1.25rem;
+    text-align: center;
+    margin-bottom: 1.25rem;
+  }
+  .total-box .tl { font-size: 13px; color: var(--text-muted); font-weight: 500; margin-bottom: 6px; }
+  .total-box .tv { font-size: 36px; font-weight: 700; color: var(--text); line-height: 1; }
+  .total-box .tm { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+
+  .level-badge {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 8px;
+  }
+
+  .chart-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+    margin: 1.5rem auto 0;
+    height: 300px;
+  }
+
+  .feedback-box {
+    background: var(--ctrl-light);
+    border-left: 4px solid var(--ctrl);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 1rem 1.25rem;
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--ctrl-dark);
+    margin-top: 1.25rem;
+  }
+
+  .source-note {
+    text-align: center;
+    font-size: 11px;
+    color: #adb5bd;
+    margin-top: 1rem;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 520px) {
+    .item { flex-wrap: wrap; gap: 8px; }
+    .radio-group { justify-content: flex-end; width: 100%; }
+    .radio-btn { width: 38px; height: 38px; font-size: 14px; }
+    .score-grid { grid-template-columns: 1fr; }
+    .page-header h1 { font-size: 22px; }
+  }
+
+  @media print {
+    .progress-bar-wrap, .action-row { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <p class="eyebrow">Self Assessment</p>
+  <h1>회복탄력성 체크리스트</h1>
+  <p>각 문항을 읽고 현재 나의 상황과 얼마나 비슷한지 선택해 주세요</p>
+  <div class="legend-row">
+    <div class="legend-item"><span class="legend-num">1</span> 전혀 다르다</div>
+    <div class="legend-item"><span class="legend-num">2</span> 다르다</div>
+    <div class="legend-item"><span class="legend-num">3</span> 비슷하다</div>
+    <div class="legend-item"><span class="legend-num">4</span> 매우 비슷하다</div>
+  </div>
+</header>
+
+<div class="progress-bar-wrap" role="status" aria-live="polite" aria-label="진행 상황">
+  <div class="progress-inner">
+    <span class="progress-label">응답 진행</span>
+    <div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
+    <span class="progress-count"><span id="progNum">0</span> / 31</span>
+  </div>
+</div>
+
+<main class="container">
+
+  <!-- 자기조절능력 -->
+  <section class="section ctrl" id="sec-ctrl" aria-labelledby="title-ctrl">
+    <div class="section-header">
+      <div class="section-icon" aria-hidden="true">🧠</div>
+      <h2 id="title-ctrl">자기조절능력</h2>
+      <span class="section-badge">문항 1–11</span>
+    </div>
+    <div id="items-ctrl"></div>
+  </section>
+
+  <!-- 대인관계능력 -->
+  <section class="section rel" id="sec-rel" aria-labelledby="title-rel">
+    <div class="section-header">
+      <div class="section-icon" aria-hidden="true">🤝</div>
+      <h2 id="title-rel">대인관계능력</h2>
+      <span class="section-badge">문항 12–21</span>
+    </div>
+    <div id="items-rel"></div>
+  </section>
+
+  <!-- 긍정성 -->
+  <section class="section pos" id="sec-pos" aria-labelledby="title-pos">
+    <div class="section-header">
+      <div class="section-icon" aria-hidden="true">☀️</div>
+      <h2 id="title-pos">긍정성</h2>
+      <span class="section-badge">문항 22–31</span>
+    </div>
+    <div id="items-pos"></div>
+  </section>
+
+  <div class="action-row">
+    <button class="btn primary" onclick="calcScore()">결과 보기</button>
+    <button class="btn" onclick="resetAll()">초기화</button>
+  </div>
+
+  <!-- 결과 -->
+  <section id="result-section" aria-label="결과">
+    <div class="result-card">
+      <h2>나의 회복탄력성 결과</h2>
+
+      <div class="score-grid">
+        <div class="score-box ctrl">
+          <div class="slabel">자기조절능력</div>
+          <div class="sval" id="s-ctrl">–</div>
+          <div class="smax">/ 44점</div>
+        </div>
+        <div class="score-box rel">
+          <div class="slabel">대인관계능력</div>
+          <div class="sval" id="s-rel">–</div>
+          <div class="smax">/ 40점</div>
+        </div>
+        <div class="score-box pos">
+          <div class="slabel">긍정성</div>
+          <div class="sval" id="s-pos">–</div>
+          <div class="smax">/ 40점</div>
+        </div>
+      </div>
+
+      <div class="total-box">
+        <div class="tl">전체 합계</div>
+        <div class="tv" id="s-total">–</div>
+        <div class="tm">/ 124점</div>
+        <div id="level-badge-wrap"></div>
+      </div>
+
+      <div class="chart-wrap">
+        <canvas id="radarChart" role="img" aria-label="자기조절능력, 대인관계능력, 긍정성 세 영역의 점수를 나타낸 레이더 차트">
+          회복탄력성 세 영역 점수 시각화
+        </canvas>
+      </div>
+
+      <div class="feedback-box" id="feedbackBox"></div>
+    </div>
+
+    <p class="source-note">
+      출처: 한선영(2015). 회복탄력성, 일-삶 균형과 직무만족의 관계. 고려대학교 석사학위논문에서 발췌 및 표현 수정.
+    </p>
+
+    <div class="action-row">
+      <button class="btn" onclick="resetAll()">다시 하기</button>
+    </div>
+  </section>
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const ITEMS = {
+  ctrl: [
+    "나는 어려운 일이 닥쳤을 때 내 감정을 다스릴 수 있다.",
+    "내가 무슨 생각을 하면, 그 생각이 내 기분에 어떤 영향을 미칠지 잘 이해한다.",
+    "논쟁거리가 되는 문제를 가족이나 친구들과 토론할 때 내 감정을 잘 다스릴 수 있다.",
+    "당장 해야 할 일이 있으면 나는 어떠한 유혹이나 방해도 잘 이겨내고 할 일을 한다.",
+    "아무리 당황스럽고 어려운 상황이 닥쳐도, 나는 내가 어떤 생각을 하고 있는지 스스로 잘 안다.",
+    "누군가가 나에게 화를 낼 경우 나는 우선 그 사람의 의견을 잘 듣는다.",
+    "즉흥적으로 일을 처리하기 보다는 미리 계획을 세우는 편이다.",
+    "문제가 생기면 여러 가지 가능한 해결방안에 대해 먼저 생각한 후에 해결하려고 노력한다.",
+    "어려운 일이 생기면 그 원인이 무엇인지 신중하게 생각한 후에 그 문제를 해결하려고 노력한다.",
+    "나는 대부분의 상황에서 문제의 원인을 잘 알고 있다고 믿는다.",
+    "내가 목적하는 바를 이루기 위해, 당장의 손해를 감수할 수 있다."
+  ],
+  rel: [
+    "나는 분위기나 대화 상대에 따라 대화를 잘 이끌어 갈 수 있다.",
+    "나는 재치 있는 농담을 잘한다.",
+    "서로 마음을 터놓고 얘기할 수 있는 친구가 있다.",
+    "사람들의 얼굴표정을 보면 어떤 감정인지 알 수 있다.",
+    "슬퍼하거나 화를 내거나 당황하는 사람을 보면 그들이 어떤 생각을 하는지 잘 알 수 있다.",
+    "동료가 화를 낼 경우 나는 그 이유를 꽤 잘 아는 편이다.",
+    "동료와 친구들은 내가 자기 말을 잘 이해해 준다고 한다.",
+    "나는 내 주변 사람들로부터 사랑과 관심을 받고 있다.",
+    "나는 내 친구들을 정말로 좋아한다.",
+    "내 주변 사람들은 내 기분을 잘 이해한다."
+  ],
+  pos: [
+    "열심히 일하면 언제나 보답이 있으리라고 생각한다.",
+    "맞든 아니든 \"아무리 어려운 문제라도 나는 해결할 수 있다.\"고 일단 믿는 것이 좋다고 생각한다.",
+    "어려운 상황이 닥쳐도 나는 모든 일이 다 잘 해결될 거라고 확신한다.",
+    "내 삶은 내가 생각하는 이상적인 삶에 가깝다.",
+    "내 인생의 여러 가지 조건들은 만족스럽다.",
+    "나는 내 삶에 만족한다.",
+    "나는 내 삶에서 중요하다고 생각한 것들은 다 갖고 있다.",
+    "나는 다시 태어나도 나의 현재 삶을 다시 살고 싶다.",
+    "나는 다양한 종류의 많은 사람들에게 고마움을 느낀다.",
+    "나이가 들어갈수록 내 삶의 일부가 된 사람, 사건, 생활에 대해 감사하는 마음이 더 커져간다."
+  ]
+};
+
+const TOTAL = 31;
+const answers = { ctrl: {}, rel: {}, pos: {} };
+let chart = null;
+
+function buildItems(type, containerId) {
+  const offsets = { ctrl: 1, rel: 12, pos: 22 };
+  const container = document.getElementById(containerId);
+  ITEMS[type].forEach((text, i) => {
+    const qNum = offsets[type] + i;
+    const div = document.createElement('div');
+    div.className = 'item';
+    div.innerHTML = `
+      <span class="item-num">${qNum}</span>
+      <span class="item-text">${text}</span>
+      <div class="radio-group" role="radiogroup" aria-label="문항 ${qNum} 응답">
+        ${[1,2,3,4].map(v =>
+          `<button class="radio-btn" id="rb-${type}-${i}-${v}"
+            aria-label="${v}점"
+            aria-pressed="false"
+            onclick="select('${type}',${i},${v})">${v}</button>`
+        ).join('')}
+      </div>`;
+    container.appendChild(div);
+  });
+}
+
+function select(type, idx, val) {
+  [1,2,3,4].forEach(v => {
+    const el = document.getElementById(`rb-${type}-${idx}-${v}`);
+    el.classList.remove('selected');
+    el.setAttribute('aria-pressed', 'false');
+  });
+  const el = document.getElementById(`rb-${type}-${idx}-${val}`);
+  el.classList.add('selected');
+  el.setAttribute('aria-pressed', 'true');
+  answers[type][idx] = val;
+  updateProgress();
+}
+
+function updateProgress() {
+  const done = Object.values(answers.ctrl).length + Object.values(answers.rel).length + Object.values(answers.pos).length;
+  const pct = Math.round((done / TOTAL) * 100);
+  document.getElementById('progFill').style.width = pct + '%';
+  document.getElementById('progNum').textContent = done;
+}
+
+function calcScore() {
+  const types = ['ctrl', 'rel', 'pos'];
+  const names = { ctrl: '자기조절능력', rel: '대인관계능력', pos: '긍정성' };
+  for (const t of types) {
+    if (Object.keys(answers[t]).length < ITEMS[t].length) {
+      alert(`'${names[t]}' 영역의 모든 문항에 응답해 주세요.`);
+      document.getElementById('sec-' + t).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+  }
+
+  const sc = {};
+  types.forEach(t => { sc[t] = Object.values(answers[t]).reduce((a,b) => a+b, 0); });
+  const total = sc.ctrl + sc.rel + sc.pos;
+  const pct = Math.round((total / 124) * 100);
+
+  document.getElementById('s-ctrl').textContent = sc.ctrl;
+  document.getElementById('s-rel').textContent = sc.rel;
+  document.getElementById('s-pos').textContent = sc.pos;
+  document.getElementById('s-total').textContent = total;
+
+  let level, badgeBg, badgeColor, fb;
+  if (pct >= 75) {
+    level = '높음 High'; badgeBg = '#E6F1FB'; badgeColor = '#0C447C';
+    fb = '전반적인 회복탄력성이 높은 수준입니다. 어려운 상황에서도 감정을 잘 조절하고, 주변 사람들과 긍정적인 관계를 유지하며, 낙관적 시각으로 삶을 바라보는 역량이 강합니다. 이 강점을 유지하면서 상대적으로 낮은 영역을 더 발전시켜 보세요.';
+  } else if (pct >= 50) {
+    level = '보통 Medium'; badgeBg = '#FAEEDA'; badgeColor = '#633806';
+    fb = '전반적인 회복탄력성이 보통 수준입니다. 일부 상황에서는 잘 대처하지만 스트레스 상황에서 어려움을 느낄 수 있습니다. 점수가 낮은 영역을 중심으로 구체적인 역량 강화 활동을 시작해 보세요.';
+  } else {
+    level = '낮음 Low'; badgeBg = '#FCEBEB'; badgeColor = '#791F1F';
+    fb = '회복탄력성을 키울 여지가 많습니다. 어려운 상황에서 감정 조절이나 대인관계에서 더 많은 지지가 필요할 수 있습니다. 코칭이나 상담을 통해 점진적으로 역량을 키워나가는 것을 권장합니다.';
+  }
+
+  document.getElementById('level-badge-wrap').innerHTML =
+    `<span class="level-badge" style="background:${badgeBg};color:${badgeColor}">${level}</span>`;
+  document.getElementById('feedbackBox').textContent = fb;
+
+  const p = { ctrl: Math.round((sc.ctrl/44)*100), rel: Math.round((sc.rel/40)*100), pos: Math.round((sc.pos/40)*100) };
+
+  if (chart) chart.destroy();
+  chart = new Chart(document.getElementById('radarChart'), {
+    type: 'radar',
+    data: {
+      labels: ['자기조절능력', '대인관계능력', '긍정성'],
+      datasets: [{
+        label: '내 점수 (%)',
+        data: [p.ctrl, p.rel, p.pos],
+        backgroundColor: 'rgba(24,95,165,0.12)',
+        borderColor: '#185FA5',
+        borderWidth: 2,
+        pointBackgroundColor: '#185FA5',
+        pointRadius: 6,
+        pointHoverRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        r: {
+          min: 0, max: 100,
+          ticks: { stepSize: 25, font: { size: 11, family: 'Noto Sans KR' }, color: '#9ca3af',
+            callback: v => v + '%' },
+          pointLabels: { font: { size: 13, family: 'Noto Sans KR', weight: '600' }, color: '#374151' },
+          grid: { color: '#e5e7eb' },
+          angleLines: { color: '#e5e7eb' }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ' ' + ctx.raw + '%' } }
+      }
+    }
+  });
+
+  const res = document.getElementById('result-section');
+  res.classList.add('show');
+  res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function resetAll() {
+  answers.ctrl = {}; answers.rel = {}; answers.pos = {};
+  ['ctrl','rel','pos'].forEach(t => {
+    ITEMS[t].forEach((_, i) => {
+      [1,2,3,4].forEach(v => {
+        const el = document.getElementById(`rb-${t}-${i}-${v}`);
+        if (el) { el.classList.remove('selected'); el.setAttribute('aria-pressed','false'); }
+      });
+    });
+  });
+  if (chart) { chart.destroy(); chart = null; }
+  document.getElementById('result-section').classList.remove('show');
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Build
+buildItems('ctrl', 'items-ctrl');
+buildItems('rel',  'items-rel');
+buildItems('pos',  'items-pos');
+updateProgress();
+</script>
+</body>
+</html>
