@@ -338,7 +338,7 @@
   .chart-wrap {
     position: relative;
     width: 100%;
-    max-width: 380px;
+    max-width: 560px;
     margin: 1.5rem auto 0;
     height: 300px;
   }
@@ -613,37 +613,65 @@ function calcScore() {
 
   if (chart) chart.destroy();
   chart = new Chart(document.getElementById('radarChart'), {
-    type: 'radar',
+    type: 'line',
     data: {
       labels: ['자기조절능력', '대인관계능력', '긍정성'],
-      datasets: [{
-        label: '내 점수 (%)',
-        data: [p.ctrl, p.rel, p.pos],
-        backgroundColor: 'rgba(24,95,165,0.12)',
-        borderColor: '#185FA5',
-        borderWidth: 2,
-        pointBackgroundColor: '#185FA5',
-        pointRadius: 6,
-        pointHoverRadius: 8
-      }]
+      datasets: [
+        {
+          label: '내 점수 (%)',
+          data: [p.ctrl, p.rel, p.pos],
+          backgroundColor: 'rgba(24,95,165,0.12)',
+          borderColor: '#185FA5',
+          borderWidth: 3,
+          pointBackgroundColor: '#185FA5',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          pointRadius: 8,
+          pointHoverRadius: 10,
+          tension: 0.4,
+          fill: true
+        },
+        {
+          label: '평균 기준 (%)',
+          data: [62, 62, 62],
+          borderColor: '#e5e7eb',
+          borderWidth: 2,
+          borderDash: [6, 4],
+          pointRadius: 0,
+          tension: 0.4,
+          fill: false
+        }
+      ]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       scales: {
-        r: {
+        x: {
+          grid: { color: '#f3f4f6' },
+          ticks: { font: { size: 13, family: 'Noto Sans KR', weight: '600' }, color: '#374151' }
+        },
+        y: {
           min: 0, max: 100,
-          ticks: { stepSize: 25, font: { size: 11, family: 'Noto Sans KR' }, color: '#9ca3af',
-            callback: v => v + '%' },
-          pointLabels: { font: { size: 13, family: 'Noto Sans KR', weight: '600' }, color: '#374151' },
-          grid: { color: '#e5e7eb' },
-          angleLines: { color: '#e5e7eb' }
+          grid: { color: '#f3f4f6' },
+          ticks: {
+            stepSize: 25,
+            font: { size: 11, family: 'Noto Sans KR' },
+            color: '#9ca3af',
+            callback: v => v + '%'
+          }
         }
       },
       plugins: {
         legend: { display: false },
-        tooltip: { callbacks: { label: ctx => ' ' + ctx.raw + '%' } }
-      }
+        tooltip: {
+          callbacks: {
+            label: ctx => ctx.dataset.label === '내 점수 (%)' ? ' ' + ctx.raw + '%' : null
+          },
+          filter: item => item.datasetIndex === 0
+        }
+      },
+      animation: { duration: 800, easing: 'easeInOutQuart' }
     }
   });
 
