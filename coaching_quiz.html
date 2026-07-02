@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>코칭 대화 능력 체크 | WISET 멘토 워크숍</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+
+  :root {
+    --teal:   #1B8CA6;
+    --teal-d: #0E6A80;
+    --teal-l: #D6EFF4;
+    --orange: #F07E26;
+    --orange-l: #FDE8CC;
+    --red:    #D32F2F;
+    --blue:   #1976D2;
+    --green:  #388E3C;
+    --purple: #7B1FA2;
+    --amber:  #F57C00;
+    --white:  #FFFFFF;
+    --dark:   #1A2E3A;
+    --gray:   #4A5568;
+    --gray2:  #94A3B8;
+    --bg:     #F4F7F9;
+    --card:   #FFFFFF;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── 헤더 ── */
+  .header {
+    width: 100%;
+    background: var(--teal);
+    color: white;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .header .logo { font-size: 15px; opacity: .9; }
+
+  /* ── 진행 바 ── */
+  .progress-bar {
+    width: 100%;
+    height: 5px;
+    background: var(--teal-l);
+    position: relative;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--orange);
+    transition: width .5s ease;
+  }
+
+  /* ── 컨테이너 ── */
+  .container {
+    width: 100%;
+    max-width: 780px;
+    padding: 32px 20px 60px;
+  }
+
+  /* ── 화면 전환 ── */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ── 인트로 ── */
+  .intro-badge {
+    display: inline-block;
+    background: var(--orange);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+  }
+  .intro-title {
+    font-size: 30px;
+    font-weight: 900;
+    color: var(--teal-d);
+    line-height: 1.3;
+    margin-bottom: 10px;
+  }
+  .intro-sub {
+    font-size: 15px;
+    color: var(--gray);
+    margin-bottom: 32px;
+    line-height: 1.7;
+  }
+  .round-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .round-card {
+    background: white;
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    border-left: 5px solid var(--teal);
+  }
+  .round-card:nth-child(2) { border-left-color: var(--orange); }
+  .round-card:nth-child(3) { border-left-color: var(--purple); }
+  .round-num {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--teal);
+    color: white;
+    font-size: 16px;
+    font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .round-card:nth-child(2) .round-num { background: var(--orange); }
+  .round-card:nth-child(3) .round-num { background: var(--purple); }
+  .round-info h3 { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+  .round-info p  { font-size: 13px; color: var(--gray); }
+
+  .btn-start {
+    width: 100%;
+    padding: 17px;
+    background: var(--teal);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s, transform .1s;
+    font-family: inherit;
+    letter-spacing: 0.3px;
+  }
+  .btn-start:hover { background: var(--teal-d); transform: translateY(-1px); }
+
+  /* ── 라운드 헤더 ── */
+  .round-header {
+    margin-bottom: 24px;
+  }
+  .round-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--teal);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+  }
+  .round-label.orange { background: var(--orange); }
+  .round-label.purple { background: var(--purple); }
+  .round-title {
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--dark);
+    line-height: 1.3;
+  }
+  .round-desc {
+    font-size: 13px;
+    color: var(--gray);
+    margin-top: 6px;
+  }
+  .q-counter {
+    font-size: 13px;
+    color: var(--gray2);
+    margin-top: 8px;
+    font-weight: 500;
+  }
+
+  /* ── 질문 카드 ── */
+  .q-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.07);
+    margin-bottom: 18px;
+  }
+  .q-situation {
+    background: var(--orange-l);
+    border-left: 4px solid var(--orange);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 14px;
+    color: var(--dark);
+    font-style: italic;
+    line-height: 1.7;
+    margin-bottom: 18px;
+  }
+  .q-situation.teal { background: var(--teal-l); border-color: var(--teal); }
+  .q-question {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  /* ── 선택지 ── */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .opt-btn {
+    width: 100%;
+    text-align: left;
+    padding: 14px 18px;
+    background: var(--bg);
+    border: 2px solid #E2E8F0;
+    border-radius: 12px;
+    font-size: 14px;
+    color: var(--dark);
+    cursor: pointer;
+    transition: all .2s;
+    font-family: inherit;
+    line-height: 1.5;
+    position: relative;
+  }
+  .opt-btn:hover:not(:disabled) {
+    border-color: var(--teal);
+    background: var(--teal-l);
+  }
+  .opt-btn.correct {
+    border-color: var(--green);
+    background: #E8F5E9;
+    color: var(--green);
+    font-weight: 700;
+  }
+  .opt-btn.wrong {
+    border-color: var(--red);
+    background: #FFEBEE;
+    color: var(--red);
+  }
+  .opt-btn.dim { opacity: .5; }
+  .opt-btn .opt-icon {
+    position: absolute;
+    right: 16px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+  }
+
+  /* ── 피드백 ── */
+  .feedback {
+    margin-top: 14px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.65;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.ok   { background: #E8F5E9; color: #1B5E20; border: 1px solid #A5D6A7; }
+  .feedback.ng   { background: #FFEBEE; color: #B71C1C; border: 1px solid #EF9A9A; }
+  .feedback strong { display: block; margin-bottom: 4px; font-size: 14px; }
+
+  /* ── 다음 버튼 ── */
+  .btn-next {
+    width: 100%;
+    padding: 15px;
+    background: var(--teal);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 16px;
+    display: none;
+    font-family: inherit;
+    transition: background .2s;
+  }
+  .btn-next.show { display: block; }
+  .btn-next:hover { background: var(--teal-d); }
+
+  /* ── Round 2 드래그 ── */
+  .step-match {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .step-chip {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg);
+    border: 2px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all .2s;
+    font-family: inherit;
+    text-align: left;
+  }
+  .step-chip:hover:not(:disabled) {
+    border-color: var(--teal);
+    background: var(--teal-l);
+  }
+  .step-chip.selected {
+    border-color: var(--teal);
+    background: var(--teal-l);
+    font-weight: 700;
+    color: var(--teal-d);
+  }
+  .step-chip.correct { border-color: var(--green); background: #E8F5E9; color: var(--green); font-weight: 700; }
+  .step-chip.wrong   { border-color: var(--red);   background: #FFEBEE; color: var(--red); }
+  .step-dot {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 900;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  /* ── Round 3 채팅 ── */
+  .chat-box {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.07);
+    margin-bottom: 16px;
+    min-height: 240px;
+    max-height: 380px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .msg {
+    max-width: 82%;
+    padding: 11px 15px;
+    border-radius: 14px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .msg.mentee {
+    background: #F1F5F9;
+    color: var(--dark);
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+  }
+  .msg.mentor {
+    background: var(--teal);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+  }
+  .msg.system {
+    background: var(--orange-l);
+    color: var(--dark);
+    align-self: center;
+    font-size: 12px;
+    font-style: italic;
+    text-align: center;
+    max-width: 100%;
+    border-radius: 8px;
+    padding: 8px 14px;
+  }
+  .msg-label {
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--gray2);
+  }
+  .msg.mentee .msg-label { text-align: left; }
+  .msg.mentor .msg-label { text-align: right; color: rgba(255,255,255,.7); }
+
+  .chat-hint {
+    background: var(--teal-l);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--teal-d);
+    margin-bottom: 12px;
+    line-height: 1.6;
+  }
+  .chat-hint strong { display: block; margin-bottom: 3px; }
+
+  .chat-input-wrap {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .chat-input {
+    flex: 1;
+    padding: 13px 16px;
+    border: 2px solid #E2E8F0;
+    border-radius: 12px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--dark);
+    outline: none;
+    transition: border-color .2s;
+  }
+  .chat-input:focus { border-color: var(--teal); }
+  .btn-send {
+    padding: 13px 20px;
+    background: var(--teal);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
+  }
+  .btn-send:hover { background: var(--teal-d); }
+  .btn-send:disabled { background: var(--gray2); cursor: not-allowed; }
+
+  .chat-eval {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 12px;
+    border: 2px solid var(--teal-l);
+    display: none;
+  }
+  .chat-eval.show { display: block; }
+  .eval-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--bg);
+    font-size: 13px;
+  }
+  .eval-row:last-child { border-bottom: none; }
+  .eval-label { color: var(--gray); }
+  .eval-stars { color: var(--orange); font-size: 15px; }
+
+  /* ── 점수 결과 ── */
+  .result-card {
+    background: white;
+    border-radius: 20px;
+    padding: 36px 28px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.1);
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .result-level {
+    font-size: 48px;
+    margin-bottom: 8px;
+  }
+  .result-title {
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--teal-d);
+    margin-bottom: 8px;
+  }
+  .result-desc {
+    font-size: 14px;
+    color: var(--gray);
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+  .score-breakdown {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+  .score-item {
+    flex: 1;
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 14px 8px;
+    text-align: center;
+  }
+  .score-num {
+    font-size: 26px;
+    font-weight: 900;
+    margin-bottom: 4px;
+  }
+  .score-label { font-size: 11px; color: var(--gray); font-weight: 500; }
+  .total-score {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--teal);
+    padding: 14px;
+    background: var(--teal-l);
+    border-radius: 12px;
+    margin-bottom: 20px;
+  }
+  .result-tips {
+    text-align: left;
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .result-tips h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--orange);
+    margin-bottom: 10px;
+  }
+  .result-tips li {
+    font-size: 13px;
+    color: var(--dark);
+    padding: 5px 0;
+    line-height: 1.6;
+    padding-left: 16px;
+    position: relative;
+    list-style: none;
+  }
+  .result-tips li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--teal);
+    font-weight: 900;
+  }
+  .btn-retry {
+    width: 100%;
+    padding: 15px;
+    background: var(--orange);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .2s;
+  }
+  .btn-retry:hover { background: #D0691A; }
+
+  /* ── 로딩 스피너 ── */
+  .spinner {
+    display: inline-block;
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,.4);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="logo">W·SET</span>
+  <span>멘토 코칭 대화 능력 체크</span>
+</div>
+<div class="progress-bar">
+  <div class="progress-fill" id="progressFill" style="width:0%"></div>
+</div>
+
+<div class="container">
+
+  <!-- ══ 인트로 ══ -->
+  <div class="screen active" id="screenIntro">
+    <div class="intro-badge">🎯 WISET 멘토 워크숍</div>
+    <div class="intro-title">나의 코칭 대화<br>능력은 몇 점일까?</div>
+    <div class="intro-sub">
+      세 가지 미션으로 내 코칭 대화 스타일을 점검해보세요.<br>
+      총 15문항 · 약 5분 소요
+    </div>
+    <div class="round-cards">
+      <div class="round-card">
+        <div class="round-num">1</div>
+        <div class="round-info">
+          <h3>언어 전환 실습</h3>
+          <p>지시형 멘토 말 → 코칭 질문으로 바꿔보기 (5문항)</p>
+        </div>
+      </div>
+      <div class="round-card">
+        <div class="round-num">2</div>
+        <div class="round-info">
+          <h3>5-STEPS 단계 진단</h3>
+          <p>멘티 상황 보고 어떤 단계인지 맞추기 (5문항)</p>
+        </div>
+      </div>
+      <div class="round-card">
+        <div class="round-num">3</div>
+        <div class="round-info">
+          <h3>AI 멘티와 코칭 대화</h3>
+          <p>실제 AI 멘티와 대화하며 코칭 능력 평가받기 (5회 대화)</p>
+        </div>
+      </div>
+    </div>
+    <button class="btn-start" onclick="startRound1()">시작하기 →</button>
+  </div>
+
+  <!-- ══ Round 1 ══ -->
+  <div class="screen" id="screenR1">
+    <div class="round-header">
+      <div class="round-label">Round 1 · 언어 전환 실습</div>
+      <div class="round-title">이 말을 코칭 질문으로 바꾸면?</div>
+      <div class="round-desc">멘토의 지시형 말을 코칭 대화로 가장 잘 전환한 것을 고르세요.</div>
+      <div class="q-counter" id="r1Counter">1 / 5</div>
+    </div>
+    <div id="r1Content"></div>
+    <button class="btn-next" id="btnNextR1" onclick="nextR1()">다음 →</button>
+  </div>
+
+  <!-- ══ Round 2 ══ -->
+  <div class="screen" id="screenR2">
+    <div class="round-header">
+      <div class="round-label orange">Round 2 · 5-STEPS 단계 진단</div>
+      <div class="round-title">이 멘토 질문은 어느 단계일까요?</div>
+      <div class="round-desc">5-STEPS 모델의 단계 중 해당하는 것을 선택하세요.</div>
+      <div class="q-counter" id="r2Counter">1 / 5</div>
+    </div>
+    <div id="r2Content"></div>
+    <button class="btn-next" id="btnNextR2" onclick="nextR2()">다음 →</button>
+  </div>
+
+  <!-- ══ Round 3 ══ -->
+  <div class="screen" id="screenR3">
+    <div class="round-header">
+      <div class="round-label purple">Round 3 · AI 멘티와 코칭 대화</div>
+      <div class="round-title">AI 멘티와 직접 대화해보세요</div>
+      <div class="round-desc">멘티의 고민을 듣고 코칭 질문으로 대화를 이끌어보세요. (5회 대화)</div>
+    </div>
+    <div class="chat-hint" id="chatHint">
+      <strong>💡 이번 멘티 상황</strong>
+      <span id="chatSituation"></span>
+    </div>
+    <div class="chat-box" id="chatBox"></div>
+    <div class="chat-input-wrap">
+      <input class="chat-input" id="chatInput" placeholder="코칭 질문을 입력하세요..." maxlength="200"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg();}">
+      <button class="btn-send" id="btnSend" onclick="sendMsg()">전송</button>
+    </div>
+    <div class="chat-eval" id="chatEval"></div>
+    <button class="btn-next" id="btnFinishChat" onclick="finishChat()" style="display:none;background:var(--purple)">결과 보기 →</button>
+  </div>
+
+  <!-- ══ 결과 ══ -->
+  <div class="screen" id="screenResult">
+    <div class="result-card">
+      <div class="result-level" id="resultEmoji"></div>
+      <div class="result-title" id="resultTitle"></div>
+      <div class="result-desc" id="resultDesc"></div>
+      <div class="total-score" id="totalScore"></div>
+      <div class="score-breakdown">
+        <div class="score-item">
+          <div class="score-num" id="s1Score" style="color:var(--teal)"></div>
+          <div class="score-label">언어전환</div>
+        </div>
+        <div class="score-item">
+          <div class="score-num" id="s2Score" style="color:var(--orange)"></div>
+          <div class="score-label">단계진단</div>
+        </div>
+        <div class="score-item">
+          <div class="score-num" id="s3Score" style="color:var(--purple)"></div>
+          <div class="score-label">코칭대화</div>
+        </div>
+      </div>
+      <div class="result-tips">
+        <h4>✨ 오늘의 코칭 메시지</h4>
+        <ul id="resultTips"></ul>
+      </div>
+    </div>
+    <button class="btn-retry" onclick="location.reload()">다시 도전하기 🔄</button>
+  </div>
+
+</div>
+
+<script>
+// ════════════════════════════════════════════════
+// 데이터
+// ════════════════════════════════════════════════
+
+const R1_DATA = [
+  {
+    situation: '멘티: "연구도 좋고 산업도 좋은데, 어디로 가야 할지 모르겠어요."',
+    mentor: '"일단 둘 다 경험해보는 게 좋아요. 인턴이라도 해보세요."',
+    options: [
+      '"그냥 하고 싶은 대로 해봐요."',
+      '"지금까지 가장 몰입했던 순간이 언제였어요?"',
+      '"연구와 산업, 둘 다 가능성이 있으니 걱정 마세요."',
+      '"선배들은 어떻게 결정했는지 물어봤어요?"',
+    ],
+    answer: 1,
+    fb_ok: '✅ 정답! "몰입 순간"을 묻는 질문은 멘티 스스로 기준을 찾게 돕는 Expand 단계 질문입니다.',
+    fb_ng:  '💡 멘티가 스스로 기준을 발견하도록 돕는 질문이 좋아요. "가장 몰입했던 순간"을 묻는 게 핵심입니다.',
+  },
+  {
+    situation: '멘티: "발표할 때마다 너무 떨려요. 저는 원래 발표를 못하는 것 같아요."',
+    mentor: '"저도 처음엔 그랬어요. 많이 하다 보면 늘어요."',
+    options: [
+      '"발표 연습을 더 많이 하면 나아질 거예요."',
+      '"발표할 때 어떤 순간이 제일 힘들어요?"',
+      '"틀려도 괜찮아요. 다들 완벽하지 않아요."',
+      '"호흡 연습을 해보는 건 어때요?"',
+    ],
+    answer: 1,
+    fb_ok: '✅ 정답! 구체적인 순간을 묻는 것이 Topic 단계의 핵심입니다. "언제"를 찾아야 "왜"를 알 수 있어요.',
+    fb_ng:  '💡 "어떤 순간이 제일 힘들어요?"처럼 구체적인 지점을 먼저 파악하는 것이 Topic 단계입니다.',
+  },
+  {
+    situation: '멘티: "논문도 써야 하고 취업 준비도 해야 하는데, 뭘 먼저 해야 할지 모르겠어요."',
+    mentor: '"취업 준비가 더 급하니까 일단 취업부터 해요."',
+    options: [
+      '"지금 이 순간, 딱 하나만 고른다면 뭐가 더 마음에 걸려요?"',
+      '"두 가지를 동시에 하는 건 힘드니까 하나씩 해요."',
+      '"선배들한테 물어봐서 어떻게 하는지 알아봐요."',
+      '"타임테이블을 짜서 둘 다 관리해봐요."',
+    ],
+    answer: 0,
+    fb_ok: '✅ 정답! "지금 더 마음에 걸리는 것"을 묻는 Topic 질문입니다. 멘티 스스로 우선순위를 정하게 합니다.',
+    fb_ng:  '💡 멘티가 스스로 우선순위를 발견하도록 돕는 것이 핵심입니다. "딱 하나만 고른다면?"이 좋은 Topic 질문입니다.',
+  },
+  {
+    situation: '멘티: "회사에 들어왔는데 제가 여기서 잘 할 수 있을지 모르겠어요."',
+    mentor: '"처음엔 다 그래요. 시간이 지나면 적응돼요."',
+    options: [
+      '"어떤 부분이 특히 자신 없어요?"',
+      '"걱정하지 마세요. 잘 하고 있을 거예요."',
+      '"동기들은 어때 보여요?"',
+      '"상사한테 조언을 구해봐요."',
+    ],
+    answer: 0,
+    fb_ok: '✅ 정답! "어떤 부분이?"처럼 막연한 불안을 구체적인 지점으로 좁히는 것이 Topic → Expand의 시작입니다.',
+    fb_ng:  '💡 막연한 불안을 구체적인 지점으로 좁히는 것이 먼저예요. "어떤 부분이 특히 자신 없어요?"가 좋은 질문입니다.',
+  },
+  {
+    situation: '멘티: "준비가 충분히 됐다는 확신이 없으면 못 시작하겠어요."',
+    mentor: '"일단 해보는 게 최고예요. 시작이 반이에요."',
+    options: [
+      '"지금까지 처음에 완벽하게 준비하고 시작한 적이 있었어요?"',
+      '"완벽하게 준비된 사람은 없어요. 다들 그렇게 시작해요."',
+      '"준비 리스트를 만들어서 체크해봐요."',
+      '"작은 것부터 시작해봐요."',
+    ],
+    answer: 0,
+    fb_ok: '✅ 정답! 과거 예외 경험을 탐색하는 Expand 질문입니다. 멘티 스스로 "일단 시작"의 경험을 발견하게 합니다.',
+    fb_ng:  '💡 "완벽히 준비하고 시작한 적이 있었어요?"처럼 과거 예외를 탐색하는 Expand 질문이 핵심입니다.',
+  },
+];
+
+const STEP_COLORS = {
+  Support:'D32F2F', Topic:'1976D2', Expand:'388E3C', Plan:'7B1FA2', Sustain:'F57C00'
+};
+
+const R2_DATA = [
+  {
+    situation: '멘티가 어색해 보여서 멘토가 말을 건넸다.',
+    question:  '"오늘 멘토링 자리에 어떤 마음으로 오셨어요?"',
+    answer: 'Support',
+    fb_ok: '✅ Support! 심리적 안전감을 만드는 첫 마디입니다. 멘티가 편안하게 말을 꺼낼 수 있게 돕습니다.',
+    fb_ng:  '💡 이 질문은 Support(지지하기) 단계입니다. 라포를 형성하고 안전한 환경을 만드는 것이 첫 번째입니다.',
+  },
+  {
+    situation: '멘티가 "요즘 힘들어요"라고 말했다.',
+    question:  '"지금 가장 신경 쓰이는 것이 무엇인가요?"',
+    answer: 'Topic',
+    fb_ok: '✅ Topic! What 단계 — 멘티의 핵심 주제를 명확히 하는 질문입니다.',
+    fb_ng:  '💡 이 질문은 Topic(주제확인) 단계입니다. "무엇이 문제인가"를 찾는 What 단계에 해당합니다.',
+  },
+  {
+    situation: '멘티가 취업 준비의 어려움을 이야기했다.',
+    question:  '"지금 잘 되고 있다고 느끼는 부분은 뭐예요?"',
+    answer: 'Expand',
+    fb_ok: '✅ Expand! 다른 시각으로 바라보게 하는 So What 단계입니다. 강점을 먼저 발견하게 합니다.',
+    fb_ng:  '💡 이 질문은 Expand(사고확장) 단계입니다. 다른 각도로 상황을 보게 하는 So What 질문입니다.',
+  },
+  {
+    situation: '멘티가 방향을 찾은 것 같다.',
+    question:  '"그럼 이번 주에 가장 먼저 할 수 있는 행동이 뭐예요?"',
+    answer: 'Plan',
+    fb_ok: '✅ Plan! Now What 단계 — 구체적 실행으로 연결하는 질문입니다. SMART한 첫 행동을 찾습니다.',
+    fb_ng:  '💡 이 질문은 Plan(계획수립) 단계입니다. 구체적 실행을 이끌어내는 Now What 단계에 해당합니다.',
+  },
+  {
+    situation: '멘티가 실행 계획을 세웠다.',
+    question:  '"혹시 이걸 실행하기 어렵게 만드는 것이 있을까요?"',
+    answer: 'Sustain',
+    fb_ok: '✅ Sustain! 장애요인을 사전에 탐색하는 질문입니다. 실행유지와 저항대처가 Sustain의 핵심입니다.',
+    fb_ng:  '💡 이 질문은 Sustain(실행유지) 단계입니다. 팔로업과 저항대처를 포함하는 마지막 단계입니다.',
+  },
+];
+
+const R3_SCENARIOS = [
+  {
+    name: '진로 전환을 고민하는 멘티',
+    first: '연구직 말고 다른 걸 해보고 싶은데… 말 꺼내기가 무서워요. 교수님한테도, 부모님한테도 실망을 드리는 것 같아서요.',
+    replies: [
+      '되게 무거워요. 근데 사실… 연구보다 다른 걸 할 때 훨씬 에너지가 생기더라고요.',
+      '학회 기획이나 팀 프로젝트 조율할 때요. 그때는 밤새워도 힘들지 않았어요.',
+      '그게 직업으로 연결될 수 있을지 모르겠어요. 근데 해보고 싶은 마음은 있어요.',
+      '한 번 그쪽 직무를 하는 사람을 만나보는 게 좋을 것 같아요. 정보라도 얻게요.',
+      '오늘 대화하면서 제가 뭘 원하는지 좀 더 명확해진 것 같아요. 감사해요.',
+    ],
+  },
+];
+
+// ════════════════════════════════════════════════
+// 상태
+// ════════════════════════════════════════════════
+let r1Index = 0, r1Score = 0;
+let r2Index = 0, r2Score = 0;
+let r3Score = 0;
+let r3Turn = 0;
+let r3MaxTurns = 5;
+let r3ScoreSum = 0;
+let chatHistory = [];
+let scenario = R3_SCENARIOS[0];
+
+function setProgress(pct) {
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ════════════════════════════════════════════════
+// Round 1
+// ════════════════════════════════════════════════
+function startRound1() {
+  r1Index = 0; r1Score = 0;
+  setProgress(5);
+  showScreen('screenR1');
+  renderR1();
+}
+
+function renderR1() {
+  const d = R1_DATA[r1Index];
+  document.getElementById('r1Counter').textContent = `${r1Index+1} / 5`;
+  document.getElementById('btnNextR1').classList.remove('show');
+
+  const html = `
+    <div class="q-card">
+      <div class="q-situation">${d.situation}<br><br>멘토(지시형): "${d.mentor}"</div>
+      <div class="q-question">코칭 질문으로 가장 잘 전환한 것은?</div>
+      <div class="options">
+        ${d.options.map((o,i)=>`
+          <button class="opt-btn" id="r1opt${i}" onclick="answerR1(${i})">
+            ${String.fromCharCode(9312+i)}  ${o}
+          </button>
+        `).join('')}
+      </div>
+      <div class="feedback" id="r1fb"></div>
+    </div>
+  `;
+  document.getElementById('r1Content').innerHTML = html;
+  setProgress(5 + r1Index * 9);
+}
+
+function answerR1(sel) {
+  const d = R1_DATA[r1Index];
+  const correct = d.answer;
+  const fb = document.getElementById('r1fb');
+
+  document.querySelectorAll('.opt-btn').forEach((b, i) => {
+    b.disabled = true;
+    if (i === correct) { b.classList.add('correct'); b.innerHTML += '<span class="opt-icon">✅</span>'; }
+    else if (i === sel && sel !== correct) { b.classList.add('wrong'); b.innerHTML += '<span class="opt-icon">❌</span>'; }
+    else { b.classList.add('dim'); }
+  });
+
+  if (sel === correct) {
+    r1Score++;
+    fb.className = 'feedback show ok';
+    fb.innerHTML = `<strong>잘 하셨어요! 🎉</strong>${d.fb_ok}`;
+  } else {
+    fb.className = 'feedback show ng';
+    fb.innerHTML = `<strong>아쉬워요!</strong>${d.fb_ng}`;
+  }
+  document.getElementById('btnNextR1').classList.add('show');
+}
+
+function nextR1() {
+  r1Index++;
+  if (r1Index < R1_DATA.length) {
+    renderR1();
+  } else {
+    startRound2();
+  }
+}
+
+// ════════════════════════════════════════════════
+// Round 2
+// ════════════════════════════════════════════════
+function startRound2() {
+  r2Index = 0; r2Score = 0;
+  setProgress(50);
+  showScreen('screenR2');
+  renderR2();
+}
+
+function renderR2() {
+  const d = R2_DATA[r2Index];
+  document.getElementById('r2Counter').textContent = `${r2Index+1} / 5`;
+  document.getElementById('btnNextR2').classList.remove('show');
+
+  const steps = Object.keys(STEP_COLORS);
+  const kr = {Support:'지지하기',Topic:'주제확인',Expand:'사고확장',Plan:'계획수립',Sustain:'실행유지'};
+
+  const html = `
+    <div class="q-card">
+      <div class="q-situation teal">상황: ${d.situation}</div>
+      <div class="q-question">멘토 질문: <em>"${d.question}"</em><br><br>이 질문은 5-STEPS의 어느 단계일까요?</div>
+      <div class="step-match">
+        ${steps.map(st=>`
+          <button class="step-chip" id="r2chip_${st}" onclick="answerR2('${st}')">
+            <div class="step-dot" style="background:#${STEP_COLORS[st]}">${st[0]}</div>
+            <div><strong>${st}</strong> · ${kr[st]}</div>
+          </button>
+        `).join('')}
+      </div>
+      <div class="feedback" id="r2fb"></div>
+    </div>
+  `;
+  document.getElementById('r2Content').innerHTML = html;
+  setProgress(50 + r2Index * 5);
+}
+
+function answerR2(sel) {
+  const d = R2_DATA[r2Index];
+  const correct = d.answer;
+  const fb = document.getElementById('r2fb');
+
+  document.querySelectorAll('.step-chip').forEach(b => {
+    b.disabled = true;
+    const st = b.id.replace('r2chip_','');
+    if (st === correct) b.classList.add('correct');
+    else if (st === sel && sel !== correct) b.classList.add('wrong');
+    else b.classList.add('dim');
+  });
+
+  if (sel === correct) {
+    r2Score++;
+    fb.className = 'feedback show ok';
+    fb.innerHTML = `<strong>정확해요! 🎯</strong>${d.fb_ok}`;
+  } else {
+    fb.className = 'feedback show ng';
+    fb.innerHTML = `<strong>다시 생각해봐요!</strong>${d.fb_ng}`;
+  }
+  document.getElementById('btnNextR2').classList.add('show');
+}
+
+function nextR2() {
+  r2Index++;
+  if (r2Index < R2_DATA.length) {
+    renderR2();
+  } else {
+    startRound3();
+  }
+}
+
+// ════════════════════════════════════════════════
+// Round 3 — AI 멘티 대화
+// ════════════════════════════════════════════════
+function startRound3() {
+  r3Turn = 0; r3ScoreSum = 0; chatHistory = [];
+  setProgress(75);
+  showScreen('screenR3');
+  document.getElementById('chatSituation').textContent = scenario.name + ' — ' + scenario.first.substring(0,30) + '…';
+  document.getElementById('chatBox').innerHTML = '';
+  addMsg('mentee', scenario.first);
+}
+
+function addMsg(role, text) {
+  const box = document.getElementById('chatBox');
+  const labels = { mentee:'멘티 🙋‍♀️', mentor:'멘토 (나) 💬', system:'💡' };
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  if (role !== 'system') {
+    div.innerHTML = `<div class="msg-label">${labels[role]}</div>${text}`;
+  } else {
+    div.textContent = text;
+  }
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+async function sendMsg() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  if (r3Turn >= r3MaxTurns) return;
+
+  input.value = '';
+  addMsg('mentor', msg);
+  chatHistory.push({ role: 'user', content: msg });
+
+  const btn = document.getElementById('btnSend');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>생각 중…';
+
+  try {
+    // AI 멘티 응답
+    const menteeReply = scenario.replies[r3Turn] || '네, 감사해요. 많이 생각해볼게요.';
+    
+    // 코칭 질 평가 (Claude API)
+    const evalRes = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: `당신은 5-STEPS 코칭 모델(Support·Topic·Expand·Plan·Sustain) 전문가입니다.
+멘티 상황: "${scenario.first}"
+멘토의 질문: "${msg}"
+
+이 질문을 아래 기준으로 평가해주세요. JSON만 반환하세요:
+{
+  "step": "해당 5-STEPS 단계 (Support/Topic/Expand/Plan/Sustain/기타)",
+  "score": 1~5 (1=지시형, 3=보통, 5=훌륭한 코칭질문),
+  "feedback": "한 줄 피드백 (20자 이내)",
+  "mentee_reply": "${menteeReply}"
+}`
+        }]
+      })
+    });
+
+    let evalData = { step: '?', score: 3, feedback: '좋은 시도예요!', mentee_reply: menteeReply };
+    if (evalRes.ok) {
+      const evalJson = await evalRes.json();
+      try {
+        const raw = evalJson.content[0].text.replace(/```json|```/g,'').trim();
+        evalData = JSON.parse(raw);
+      } catch(e) {}
+    }
+
+    r3ScoreSum += evalData.score;
+    r3Turn++;
+
+    // 평가 표시
+    const stars = '★'.repeat(evalData.score) + '☆'.repeat(5 - evalData.score);
+    const evalEl = document.getElementById('chatEval');
+    evalEl.innerHTML = `
+      <div class="eval-row"><span class="eval-label">단계</span><strong>${evalData.step}</strong></div>
+      <div class="eval-row"><span class="eval-label">코칭 점수</span><span class="eval-stars">${stars}</span></div>
+      <div class="eval-row"><span class="eval-label">피드백</span>${evalData.feedback}</div>
+    `;
+    evalEl.classList.add('show');
+
+    // 멘티 응답
+    setTimeout(()=>{
+      addMsg('mentee', evalData.mentee_reply || menteeReply);
+      
+      if (r3Turn >= r3MaxTurns) {
+        addMsg('system', '5회 대화가 완료됐어요! 결과를 확인해보세요.');
+        document.getElementById('btnFinishChat').style.display = 'block';
+        document.getElementById('chatInput').disabled = true;
+        btn.disabled = true;
+      } else {
+        btn.disabled = false;
+        btn.textContent = '전송';
+        input.focus();
+      }
+    }, 600);
+
+    setProgress(75 + r3Turn * 4);
+
+  } catch(e) {
+    // API 없어도 작동하도록 폴백
+    r3ScoreSum += 3;
+    r3Turn++;
+    const menteeReply = scenario.replies[Math.min(r3Turn-1, scenario.replies.length-1)];
+    setTimeout(()=>{
+      addMsg('mentee', menteeReply);
+      if(r3Turn >= r3MaxTurns) {
+        addMsg('system', '5회 대화가 완료됐어요! 결과를 확인해보세요.');
+        document.getElementById('btnFinishChat').style.display = 'block';
+        document.getElementById('chatInput').disabled = true;
+        btn.disabled = true;
+      } else {
+        btn.disabled = false;
+        btn.textContent = '전송';
+      }
+    }, 400);
+  }
+}
+
+function finishChat() {
+  r3Score = Math.round((r3ScoreSum / r3MaxTurns) * 1.5); // 5점 척도 → ~7.5점 환산
+  showResult();
+}
+
+// ════════════════════════════════════════════════
+// 결과
+// ════════════════════════════════════════════════
+function showResult() {
+  setProgress(100);
+  showScreen('screenResult');
+
+  const total = r1Score + r2Score + Math.min(r3Score, 7);
+  const max = 17;
+  const pct = Math.round(total / max * 100);
+
+  document.getElementById('s1Score').textContent = `${r1Score}/5`;
+  document.getElementById('s2Score').textContent = `${r2Score}/5`;
+  document.getElementById('s3Score').textContent = `${Math.min(r3Score,7)}/7`;
+  document.getElementById('totalScore').textContent = `총점 ${total}점 / ${max}점 (${pct}%)`;
+
+  let emoji, title, desc, tips;
+  if (pct >= 85) {
+    emoji = '🌟';
+    title = '코칭 마스터';
+    desc = '멘티가 스스로 답을 찾도록 이끄는 뛰어난 코칭 대화 능력을 갖고 있어요. 멘티들이 이런 멘토를 만나면 정말 행운입니다!';
+    tips = ['Support로 시작해 자연스럽게 흐름을 만드는 능력이 탁월해요', '멘티의 언어를 그대로 활용하는 연습을 이어가보세요', '다른 멘토들과 코칭 사례를 나눠보세요'];
+  } else if (pct >= 65) {
+    emoji = '✨';
+    title = '성장하는 코치';
+    desc = '코칭 대화의 핵심을 이해하고 실천하고 있어요. 조금 더 연습하면 멘티의 변화를 이끄는 탁월한 멘토가 될 수 있어요!';
+    tips = ['지시형 답변 대신 "어떤 점이?" 질문으로 시작해보세요', 'Expand 단계 — 예외 상황 탐색을 더 연습해보세요', '멘티의 말을 30초 더 들은 후 질문하는 연습이 도움됩니다'];
+  } else if (pct >= 45) {
+    emoji = '🌱';
+    title = '코칭 입문자';
+    desc = '코칭 마인드를 갖추기 시작했어요. 5-STEPS 흐름을 익히고 질문 연습을 꾸준히 하면 분명히 달라질 거예요!';
+    tips = ['Support — 먼저 듣고 공감하는 연습을 시작해보세요', '"왜"보다 "어떻게", "무엇이"로 시작하는 질문을 해보세요', '오늘 언어전환 실습 예시를 다시 한번 살펴보세요'];
+  } else {
+    emoji = '🌿';
+    title = '코칭 씨앗';
+    desc = '지금부터 시작이에요! 코칭은 습관입니다. 오늘 배운 5-STEPS 한 단계만 기억하고 내일 멘토링에 써보세요.';
+    tips = ['Support 하나만 기억해요 — "무슨 일이에요?"로 시작하기', '멘티에게 답을 주고 싶은 충동을 5초 참아보세요', '"잘 됐던 적이 있어요?" — 예외 탐색 질문 하나를 외워두세요'];
+  }
+
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultDesc').textContent = desc;
+  document.getElementById('resultTips').innerHTML = tips.map(t => `<li>${t}</li>`).join('');
+}
+</script>
+</body>
+</html>
